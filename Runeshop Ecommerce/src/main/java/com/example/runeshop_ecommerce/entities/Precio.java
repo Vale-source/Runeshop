@@ -14,10 +14,10 @@ import java.util.List;
 @Data
 public class Precio extends Base {
     @Column(name = "precio_compra")
-    private Float precioCompra;
+    private Double precioCompra;
 
     @Column(name = "precio_venta")
-    private Float precioVenta;
+    private Double precioVenta;
 
     @OneToMany(mappedBy = "precio")
     private List<Detalle> detalles;

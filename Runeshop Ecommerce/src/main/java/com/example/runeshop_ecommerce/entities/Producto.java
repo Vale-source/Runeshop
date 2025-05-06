@@ -22,7 +22,7 @@ public class Producto extends Base{
     private String sexo;
 
     @Column(name = "tipo_producto")
-    private Enum<TipoProducto> tipoProducto;
+    private TipoProducto tipoProducto;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")

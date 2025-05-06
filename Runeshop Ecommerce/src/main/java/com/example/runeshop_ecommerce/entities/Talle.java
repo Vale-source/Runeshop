@@ -17,8 +17,8 @@ import java.util.List;
 @Data
 public class Talle extends Base{
 
-    @Column(name = "talle")
-    private Number talle;
+    @Column(name = "numero")
+    private Number numero;
 
     @OneToMany(mappedBy = "talle")
     private List<Detalle> detalles;
