@@ -21,10 +21,10 @@ public class Detalle extends Base{
     @Column(name = "estado")
     private boolean estado;
 
-    @Column(name = "color")
+    @Column(name = "marca")
     private Enum<Marca> marca;
 
-    @Column(name = "color")
+    @Column(name = "stock")
     private Number stock;
 
     @ManyToOne

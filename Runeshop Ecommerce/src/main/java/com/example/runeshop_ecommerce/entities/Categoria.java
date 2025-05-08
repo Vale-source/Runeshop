@@ -1,9 +1,11 @@
 package com.example.runeshop_ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +18,9 @@ import java.util.List;
 @Data
 public class Categoria extends Base{
 
-    @Column(name = "nombre")
+    @JsonProperty("nombre")
+    @NotNull(message = "El nombre de la categoría no puede ser nulo.")
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
     @OneToMany(mappedBy = "categoria")

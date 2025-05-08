@@ -7,6 +7,7 @@ import com.example.runeshop_ecommerce.entities.enums.TipoProducto;
 import com.example.runeshop_ecommerce.repositories.DetalleRepository;
 import com.example.runeshop_ecommerce.repositories.ProductoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,22 +21,22 @@ public class ProductoService extends BaseService<Producto, Long> {
         super(productoRepository);
     }
 
-    public List<Producto> filtrarPorMarca(Marca marca) throws Exception{
+    @Transactional
+    public List<Producto> filtroProd (
+            Marca marca,
+            Number talleNumero,
+            TipoProducto tipoProducto,
+            String nombre,
+            String cateoria,
+            String sexo) throws Exception {
         try {
-            return detalleRepository.filtroMarca(marca);
+            return productoRepository.filtro(marca, talleNumero, tipoProducto, nombre, cateoria, sexo);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    public List<Producto> filtrarPorTalle(Talle talle) throws Exception{
-        try {
-            return detalleRepository.filtroTalle(talle);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
-
+    @Transactional
     public List<Producto> filtrarPorPrecio(Double min, Double max) throws Exception {
         try {
             return detalleRepository.filtroPrecio(min, max);
@@ -44,33 +45,19 @@ public class ProductoService extends BaseService<Producto, Long> {
         }
     }
 
-    public List<Producto> filtrarPorTipoProducto(TipoProducto tipoProducto) throws Exception {
+    @Transactional
+    public List<Producto> ordenarPrecioAscendente() throws Exception {
         try {
-            return productoRepository.filtroTipoProducto(tipoProducto);
+            return detalleRepository.ordenarPrecioAsc();
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    public List<Producto> filtrarPorNombre(Producto prod) throws Exception {
+    @Transactional
+    public List<Producto> ordenarPrecioDescendente() throws Exception {
         try {
-            return productoRepository.filtroNombre(prod);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
-
-    public List<Producto> filtrarPorCategoria(Producto prod) throws Exception {
-        try {
-            return productoRepository.filtroCategoria(prod);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
-
-    public List<Producto> filtrarPorSexo(Producto prod) throws Exception {
-        try {
-            return productoRepository.filtroSexo(prod);
+            return detalleRepository.ordenarPrecioDesc();
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
