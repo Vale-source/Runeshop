@@ -1,5 +1,6 @@
 package com.example.runeshop_ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,13 +17,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Categoria extends Base{
+public class Categoria extends Base {
 
     @JsonProperty("nombre")
     @NotNull(message = "El nombre de la categoría no puede ser nulo.")
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "categoria")
     private List<Producto> productos;
 }

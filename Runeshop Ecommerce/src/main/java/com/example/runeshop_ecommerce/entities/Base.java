@@ -8,8 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 @MappedSuperclass
 @NoArgsConstructor
@@ -20,4 +22,14 @@ public abstract class Base implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    public abstract Collection<? extends GrantedAuthority> getAuthorities();
+
+    public abstract boolean isAccountNonExpired();
+
+    public abstract boolean isAccountNonLocked();
+
+    public abstract boolean isCredentialNonExpired();
+
+    public abstract boolean isEnabled();
 }

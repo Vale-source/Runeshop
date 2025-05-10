@@ -1,9 +1,9 @@
 package com.example.runeshop_ecommerce.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,9 +17,12 @@ import java.util.List;
 @Data
 public class Talle extends Base{
 
-    @Column(name = "numero")
+    @JsonProperty("numero")
+    @NotNull(message = "el numero del talle es nulo")
+    @Column(name = "numero", nullable = false)
     private Number numero;
 
-    @OneToMany(mappedBy = "talle")
+    @ManyToMany(mappedBy = "talles")
+    @JsonBackReference
     private List<Detalle> detalles;
 }

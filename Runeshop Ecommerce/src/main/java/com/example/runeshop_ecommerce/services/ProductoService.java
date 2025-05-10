@@ -23,14 +23,15 @@ public class ProductoService extends BaseService<Producto, Long> {
 
     @Transactional
     public List<Producto> filtroProd (
+            String sexo,
             Marca marca,
             Number talleNumero,
             TipoProducto tipoProducto,
             String nombre,
-            String cateoria,
-            String sexo) throws Exception {
+            String cateoria
+            ) throws Exception {
         try {
-            return productoRepository.filtro(marca, talleNumero, tipoProducto, nombre, cateoria, sexo);
+            return productoRepository.filtro(sexo, marca, talleNumero, tipoProducto, nombre, cateoria);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

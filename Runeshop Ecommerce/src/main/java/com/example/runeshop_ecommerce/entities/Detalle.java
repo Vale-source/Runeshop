@@ -1,7 +1,11 @@
 package com.example.runeshop_ecommerce.entities;
 
 import com.example.runeshop_ecommerce.entities.enums.Marca;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,35 +19,55 @@ import java.util.List;
 @Data
 public class Detalle extends Base{
 
-    @Column(name = "color")
+    @JsonProperty("color")
+    @NotNull(message = "El color del producto no puede ser nulo")
+    @Column(name = "color", nullable = false)
     private String color;
 
-    @Column(name = "estado")
+    @JsonProperty("estado")
+    @NotNull(message = "El estado del producto no puede ser nulo")
+    @Column(name = "estado", nullable = false)
     private boolean estado;
 
-    @Column(name = "marca")
+    @JsonProperty("marca")
+    @NotNull(message = "La marca del producto no puede ser nulo")
+    @Column(name = "marca", nullable = false)
     private Enum<Marca> marca;
 
-    @Column(name = "stock")
+    @JsonProperty("stock")
+    @NotNull(message = "El stock del producto no puede ser nulo")
+    @Column(name = "stock", nullable = false)
     private Number stock;
 
     @ManyToOne
-    @JoinColumn(name = "producto_id")
+    @JsonBackReference
+    @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
-    @ManyToOne
-    @JoinColumn(name = "talle_id")
-    private Talle talle;
+    @ManyToMany
+    @JsonManagedReference
+    @JoinTable(
+            name = "detalle_talle",
+            joinColumns = @JoinColumn(name = "detalle_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "talle_id", nullable = false)
+    )
+    private List<Talle> talles;
 
     @ManyToOne
-    @JoinColumn(name = "precio_id")
+    @JsonBackReference
+    @JoinColumn(name = "precio_id", nullable = false)
     private Precio precio;
 
     @ManyToMany
+    @JsonManagedReference
     @JoinTable(
             name = "detalle_imagen",
-            joinColumns = @JoinColumn(name = "detalle_id"),
-            inverseJoinColumns = @JoinColumn(name = "imagen_id")
+            joinColumns = @JoinColumn(name = "detalle_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "imagen_id", nullable = false)
     )
     private List<Imagen> imagenes;
+
+    @ManyToMany
+    @JsonBackReference
+    private List<OrdenCompra> ordenCompras;
 }

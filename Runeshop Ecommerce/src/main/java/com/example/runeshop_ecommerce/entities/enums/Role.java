@@ -1,5 +1,6 @@
 package com.example.runeshop_ecommerce.entities.enums;
 
-public enum TipoUsuario {
-    USUARIO, ADMIN
+public enum Role {
+    USER,
+    ADMIN
 }

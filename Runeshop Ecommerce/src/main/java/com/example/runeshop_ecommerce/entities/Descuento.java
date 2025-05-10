@@ -1,9 +1,13 @@
 package com.example.runeshop_ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,15 +22,22 @@ import java.util.List;
 @Data
 public class Descuento extends Base{
 
-    @Column(name = "fecha_inicio")
+    @JsonProperty("fechaInicio")
+    @NotNull(message = "La fecha de inicio del descuento no puede ser nulo.")
+    @Column(name = "fecha_inicio", nullable = false)
     private Date fechaInicio;
 
-    @Column(name = "fecha_final")
+    @JsonProperty("fechaFinal")
+    @NotNull(message = "La fecha de finalizacion del descuento no puede ser nulo.")
+    @Column(name = "fecha_final", nullable = false)
     private Date fechaFinal;
 
-    @Column(name = "porcentaje")
+    @JsonProperty("porcentaje")
+    @NotNull(message = "El porcentaje del descuento no puede ser nulo.")
+    @Column(name = "porcentaje", nullable = false)
     private Number porcentaje;
 
+    @JsonBackReference
     @ManyToMany(mappedBy = "descuentos")
     private List<Precio> precios;
 }

@@ -6,10 +6,7 @@ import com.example.runeshop_ecommerce.entities.enums.Marca;
 import com.example.runeshop_ecommerce.entities.enums.TipoProducto;
 import com.example.runeshop_ecommerce.services.ProductoService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,16 +21,16 @@ public class ProductoController extends BaseController<Producto, Long> {
         this.productoService = productoService;
     }
 
-    @GetMapping("/filtro")
+    @GetMapping("/{sexo}/filtro")
     public ResponseEntity<List<Producto>> filtroProducto(
+            @PathVariable String sexo,
             @RequestParam(required = false) Marca marca,
             Number talleNumero,
             TipoProducto tipoProducto,
             String nombre,
-            String cateoria,
-            String sexo
+            String cateoria
     ) throws Exception {
-        List<Producto> productos = productoService.filtroProd(marca, talleNumero, tipoProducto, nombre, cateoria, sexo);
+        List<Producto> productos = productoService.filtroProd(sexo, marca, talleNumero, tipoProducto, nombre, cateoria);
         if (productos.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {

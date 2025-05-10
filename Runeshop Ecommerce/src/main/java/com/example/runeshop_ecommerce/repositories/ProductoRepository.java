@@ -13,21 +13,21 @@ import java.util.List;
 public interface ProductoRepository extends BaseRepository<Producto, Long> {
 
     @Query("SELECT DISTINCT p " +
-            "FROM Producto p JOIN p.detalles d " +
-            "WHERE (:marcaParam IS NULL OR :marcaParam = d.marca) " +
-            "AND (:talleParam IS NULL OR :talleParam = d.talle.numero) " +
+            "FROM Producto p " +
+            "JOIN p.detalles d " +
+            "JOIN d.talles t " +
+            "WHERE (:sexoParam IS NULL OR :sexoParam = p.sexo) " +
+            "AND (:marcaParam IS NULL OR :marcaParam = d.marca) " +
+            "AND (:talleParam IS NULL OR :talleParam = t.numero) " +
             "AND (:tipoProdParam IS NULL OR :tipoProdParam = p.tipoProducto) " +
             "AND (:nombreParam IS NULL OR :nombreParam = p.nombre) " +
-            "AND (:categoriaParam IS NULL OR :categoriaParam = p.categoria.nombre) " +
-            "AND (:sexoParam IS NULL OR :sexoParam = p.sexo)")
+            "AND (:categoriaParam IS NULL OR :categoriaParam = p.categoria.nombre)")
     List<Producto> filtro(
+            @Param("sexoParam") String sexo,
             @Param("marcaParam") Marca marca,
             @Param("talleParam") Number talleNumero,
             @Param("tipoProdParam") TipoProducto tipoProducto,
             @Param("nombreParam") String nombre,
-            @Param("categoriaParam") String categoria,
-            @Param("sexoParam") String sexo
+            @Param("categoriaParam") String categoria
     );
-
-
 }

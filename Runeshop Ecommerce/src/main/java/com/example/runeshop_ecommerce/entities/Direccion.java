@@ -1,6 +1,9 @@
 package com.example.runeshop_ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,18 +17,27 @@ import java.util.List;
 @Data
 public class Direccion extends Base{
 
-    @Column(name = "localidad")
+    @JsonProperty("localidad")
+    @NotNull(message = "La localidad no puede ser nulo")
+    @Column(name = "localidad", nullable = false)
     private String localidad;
 
-    @Column(name = "departamento")
+    @JsonProperty("departamento")
+    @NotNull(message = "El departamento no puede ser nulo")
+    @Column(name = "departamento", nullable = false)
     private String departamento;
 
-    @Column(name = "provincia")
+    @JsonProperty("provincia")
+    @NotNull(message = "La provincia no puede ser nulo")
+    @Column(name = "provincia",nullable = false)
     private String provinicia;
 
-    @Column(name = "pais")
+    @JsonProperty("pais")
+    @NotNull(message = "El pais no puede ser nulo")
+    @Column(name = "pais", nullable = false)
     private String pais;
 
     @OneToMany(mappedBy = "direccion")
+    @JsonManagedReference
     private List<UsuarioDireccion> usuariosDirecciones;
 }
