@@ -69,12 +69,12 @@ public class Usuario extends Base implements UserDetails {
 
     @Override
     public String getPassword() {
-        return "";
+        return contrasenia;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return nombreUsuario;
     }
 
     @Override

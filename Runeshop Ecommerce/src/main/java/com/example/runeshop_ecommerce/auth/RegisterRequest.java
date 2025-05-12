@@ -15,5 +15,4 @@ public class RegisterRequest {
     String nombre;
     String apellido;
     Number dni;
-//    String pais;
 }
