@@ -14,5 +14,6 @@ public class RegisterRequest {
     String contrasenia;
     String nombre;
     String apellido;
-    String country;
+    Number dni;
+//    String pais;
 }
