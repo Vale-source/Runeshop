@@ -5,16 +5,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "Direccion")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class Direccion extends Base{
 
     @JsonProperty("localidad")
@@ -40,4 +44,12 @@ public class Direccion extends Base{
     @OneToMany(mappedBy = "direccion")
     @JsonManagedReference
     private List<UsuarioDireccion> usuariosDirecciones;
+
+    public List<Direccion> getDirecciones() {
+        return Optional.ofNullable(usuariosDirecciones)
+                .orElseGet(List::of)
+                .stream()
+                .map(UsuarioDireccion::getDireccion)
+                .collect(Collectors.toList());
+    }
 }

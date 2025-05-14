@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,12 +22,13 @@ public class AuthService {
     private final UsuarioRepository usuarioRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getNombreUsuario(), request.getContrasenia()));
 
         Usuario usuario = usuarioRepository
-                .findUsuarioByNombreUsuario(request.getUsername())
+                .findUsuarioByNombreUsuario(request.getNombreUsuario())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
 
@@ -38,11 +40,12 @@ public class AuthService {
     public AuthResponse register(RegisterRequest request) {
         Usuario usuario = Usuario.builder()
                 .nombreUsuario(request.getNombreUsuario())
-                .contrasenia(request.getContrasenia())
+                .contrasenia(passwordEncoder.encode(request.getContrasenia()))
                 .nombre(request.getNombre())
                 .apellido(request.getApellido())
                 .dni(request.getDni())
                 .tipoUsuario(Role.USER)
+                .email(request.getEmail())
                 .build();
 
         usuarioRepository.save(usuario);

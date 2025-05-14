@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.DatabindException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class OrdenCompra extends Base{
 
     @JsonProperty("total")
@@ -33,7 +35,7 @@ public class OrdenCompra extends Base{
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "id_usuario_direccion")
-    private UsuarioDireccion id;
+    private UsuarioDireccion usuarioDireccion;
 
     @ManyToMany
     @JsonManagedReference

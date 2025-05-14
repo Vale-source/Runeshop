@@ -13,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 
@@ -51,12 +52,13 @@ public class Usuario extends Base implements UserDetails {
 
     @JsonProperty("tipoUsuario")
     @NotNull(message = "El rol de usuario no puede ser nulo")
+    @Enumerated(EnumType.STRING)
     @Column(name = "rol", nullable = false)
-    private Enum<Role> tipoUsuario;
+    private Role tipoUsuario;
 
     @JsonProperty("dni")
     @Column(name = "DNI")
-    private Number dni;
+    private Integer dni;
 
     @OneToMany(mappedBy = "usuario")
     @JsonManagedReference
@@ -92,7 +94,6 @@ public class Usuario extends Base implements UserDetails {
         return UserDetails.super.isCredentialsNonExpired();
     }
 
-    @Override
     public boolean isCredentialNonExpired() {
         return true;
     }

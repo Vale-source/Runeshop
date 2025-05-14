@@ -22,14 +22,4 @@ public abstract class Base implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    public abstract Collection<? extends GrantedAuthority> getAuthorities();
-
-    public abstract boolean isAccountNonExpired();
-
-    public abstract boolean isAccountNonLocked();
-
-    public abstract boolean isCredentialNonExpired();
-
-    public abstract boolean isEnabled();
 }
