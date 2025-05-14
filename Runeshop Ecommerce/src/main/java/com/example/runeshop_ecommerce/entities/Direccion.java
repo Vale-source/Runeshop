@@ -44,12 +44,4 @@ public class Direccion extends Base{
     @OneToMany(mappedBy = "direccion")
     @JsonManagedReference
     private List<UsuarioDireccion> usuariosDirecciones;
-
-    public List<Direccion> getDirecciones() {
-        return Optional.ofNullable(usuariosDirecciones)
-                .orElseGet(List::of)
-                .stream()
-                .map(UsuarioDireccion::getDireccion)
-                .collect(Collectors.toList());
-    }
 }

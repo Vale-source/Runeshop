@@ -8,4 +8,6 @@ import java.util.Optional;
 @Repository
 public interface UsuarioRepository extends BaseRepository<Usuario, Long> {
     Optional<Usuario> findUsuarioByNombreUsuario(String username);
+    Optional<Usuario> findUsuarioByEmail(String email);
+    Optional<Usuario> findUsuarioByDni(Integer dni);
 }

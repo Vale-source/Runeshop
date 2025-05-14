@@ -38,6 +38,14 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
+        if (usuarioRepository.findUsuarioByNombreUsuario(request.getNombreUsuario()).isPresent()) {
+            throw new UsernameNotFoundException("Nombre de usuario ya registrado");
+        } else if (usuarioRepository.findUsuarioByEmail(request.getEmail()).isPresent()) {
+            throw new UsernameNotFoundException("Email ya registrado");
+        } else if (usuarioRepository.findUsuarioByDni(request.getDni()).isPresent()) {
+            throw new UsernameNotFoundException("Dni ya registrado");
+        }
+
         Usuario usuario = Usuario.builder()
                 .nombreUsuario(request.getNombreUsuario())
                 .contrasenia(passwordEncoder.encode(request.getContrasenia()))
