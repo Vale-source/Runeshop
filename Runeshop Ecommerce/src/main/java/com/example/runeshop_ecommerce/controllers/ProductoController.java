@@ -25,7 +25,7 @@ public class ProductoController extends BaseController<Producto, Long> {
     public ResponseEntity<List<Producto>> filtroProducto(
             @PathVariable String sexo,
             @RequestParam(required = false) Marca marca,
-            Number talleNumero,
+            Integer talleNumero,
             TipoProducto tipoProducto,
             String nombre,
             String cateoria
@@ -38,7 +38,7 @@ public class ProductoController extends BaseController<Producto, Long> {
         }
     }
 
-    @GetMapping("/precio")
+    @GetMapping("/filtro_precio")
     public ResponseEntity<List<Producto>> filtrarPorPrecio(
             @RequestParam Double min, Double max
     ) throws Exception {

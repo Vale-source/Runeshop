@@ -25,7 +25,7 @@ public interface ProductoRepository extends BaseRepository<Producto, Long> {
     List<Producto> filtro(
             @Param("sexoParam") String sexo,
             @Param("marcaParam") Marca marca,
-            @Param("talleParam") Number talleNumero,
+            @Param("talleParam") Integer talleNumero,
             @Param("tipoProdParam") TipoProducto tipoProducto,
             @Param("nombreParam") String nombre,
             @Param("categoriaParam") String categoria

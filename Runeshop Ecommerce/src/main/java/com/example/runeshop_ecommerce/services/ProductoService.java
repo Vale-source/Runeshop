@@ -25,7 +25,7 @@ public class ProductoService extends BaseService<Producto, Long> {
     public List<Producto> filtroProd (
             String sexo,
             Marca marca,
-            Number talleNumero,
+            Integer talleNumero,
             TipoProducto tipoProducto,
             String nombre,
             String cateoria

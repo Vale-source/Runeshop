@@ -22,7 +22,7 @@ public class Talle extends Base{
     @JsonProperty("numero")
     @NotNull(message = "el numero del talle es nulo")
     @Column(name = "numero", nullable = false)
-    private Number numero;
+    private Integer numero;
 
     @ManyToMany(mappedBy = "talles")
     @JsonBackReference

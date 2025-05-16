@@ -10,8 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "Direccion")
@@ -34,7 +32,7 @@ public class Direccion extends Base{
     @JsonProperty("provincia")
     @NotNull(message = "La provincia no puede ser nulo")
     @Column(name = "provincia",nullable = false)
-    private String provinicia;
+    private String provincia;
 
     @JsonProperty("pais")
     @NotNull(message = "El pais no puede ser nulo")

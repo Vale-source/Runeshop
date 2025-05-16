@@ -11,10 +11,10 @@ import java.util.List;
 @Repository
 public interface UsuarioDireccionRepository extends BaseRepository<UsuarioDireccion, Long> {
 
-    @Query("SELECT ud.direccion " +
+    @Query("SELECT ud.direccion.localidad, ud.direccion.departamento, ud.direccion.provincia, ud.direccion.pais " +
             "FROM UsuarioDireccion ud " +
             "WHERE (:usuarioId = ud.usuario.id)")
-    List<Direccion> pepe(
+    List<Direccion> getDireccionesPorUsuario(
             @Param("usuarioId") Long usuarioId
     );
 }

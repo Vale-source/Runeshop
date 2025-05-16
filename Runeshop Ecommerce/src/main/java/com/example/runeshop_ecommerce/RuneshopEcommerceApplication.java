@@ -52,7 +52,7 @@ public class RuneshopEcommerceApplication {
                 Direccion direccion = Direccion.builder()
                         .localidad("Ciudad Autónoma de Buenos Aires")
                         .departamento("Palermo")
-                        .provinicia("Buenos Aires")
+                        .provincia("Buenos Aires")
                         .pais("Argentina")
                         .build();
                 direccionRepository.save(direccion);
