@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,12 +23,25 @@ import java.util.List;
 @Builder
 public class Imagen extends Base {
 
-    @JsonProperty("url")
+
+    @NotBlank
+    private String nombre;
+
+    @JsonProperty("imagenUrl")
     @NotNull(message = "La URL no puede ser nulo")
-    @JoinColumn(name = "URL", nullable = false)
-    private String url;
+    @JoinColumn(name = "imagenUrl", nullable = false)
+    private String imagenUrl;
 
     @ManyToMany(mappedBy = "imagenes")
     @JsonBackReference
     private List<Detalle> detalles;
+
+    @NotBlank
+    private String imagenId;
+
+    public Imagen(String nombre, String imagenUrl, String imagenId) {
+        this.nombre = nombre;
+        this.imagenUrl = imagenUrl;
+        this.imagenId = imagenId;
+    }
 }
