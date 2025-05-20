@@ -37,8 +37,8 @@ public class Precio extends Base {
     @JsonManagedReference
     @JoinTable(
             name = "precio_descuento",
-            joinColumns = @JoinColumn(name = "precio_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "descuento_id", nullable = false)
+            joinColumns = @JoinColumn(name = "precio_id"),
+            inverseJoinColumns = @JoinColumn(name = "descuento_id")
     )
     private List<Descuento> descuentos;
 }

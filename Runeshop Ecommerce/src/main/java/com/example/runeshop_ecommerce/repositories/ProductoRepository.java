@@ -20,7 +20,7 @@ public interface ProductoRepository extends BaseRepository<Producto, Long> {
             "AND (:marcaParam IS NULL OR :marcaParam = d.marca) " +
             "AND (:talleParam IS NULL OR :talleParam = t.numero) " +
             "AND (:tipoProdParam IS NULL OR :tipoProdParam = p.tipoProducto) " +
-            "AND (:nombreParam IS NULL OR :nombreParam = p.nombre) " +
+            "AND (:nombreParam IS NULL OR :nombreParam = p.modelo) " +
             "AND (:categoriaParam IS NULL OR :categoriaParam = p.categoria.nombre)")
     List<Producto> filtro(
             @Param("sexoParam") String sexo,

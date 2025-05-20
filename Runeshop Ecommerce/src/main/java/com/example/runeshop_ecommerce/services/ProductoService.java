@@ -29,38 +29,25 @@ public class ProductoService extends BaseService<Producto, Long> {
             TipoProducto tipoProducto,
             String nombre,
             String cateoria
-            ) throws Exception {
-        try {
-            return productoRepository.filtro(sexo, marca, talleNumero, tipoProducto, nombre, cateoria);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+            ) {
+        return productoRepository.filtro(sexo, marca, talleNumero, tipoProducto, nombre, cateoria);
     }
 
     @Transactional
     public List<Producto> filtrarPorPrecio(Double min, Double max) throws Exception {
-        try {
-            return detalleRepository.filtroPrecio(min, max);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+        if (min.isNaN() || max.isNaN()) {
+            throw new Exception("Ingrese valores validos para el filtro");
         }
+        return detalleRepository.filtroPrecio(min, max);
     }
 
     @Transactional
-    public List<Producto> ordenarPrecioAscendente() throws Exception {
-        try {
-            return detalleRepository.ordenarPrecioAsc();
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+    public List<Producto> ordenarPrecioAscendente() {
+        return detalleRepository.ordenarPrecioAsc();
     }
 
     @Transactional
-    public List<Producto> ordenarPrecioDescendente() throws Exception {
-        try {
+    public List<Producto> ordenarPrecioDescendente() {
             return detalleRepository.ordenarPrecioDesc();
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
     }
 }

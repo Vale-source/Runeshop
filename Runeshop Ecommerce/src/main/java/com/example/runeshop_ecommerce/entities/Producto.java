@@ -21,10 +21,10 @@ import java.util.List;
 @Builder
 public class Producto extends Base{
 
-    @JsonProperty("nombre")
-    @NotNull(message = "El nombre del producto no puede ser nulo")
-    @Column(name = "nombre", nullable = false)
-    private String nombre;
+    @JsonProperty("modelo")
+    @NotNull(message = "El modelo del producto no puede ser nulo")
+    @Column(name = "modelo", nullable = false)
+    private String modelo;
 
     @JsonProperty("sexo")
     @NotNull(message = "El sexo del producto no puede ser nulo")

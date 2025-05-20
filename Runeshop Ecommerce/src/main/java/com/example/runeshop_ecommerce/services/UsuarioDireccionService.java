@@ -23,26 +23,19 @@ public class UsuarioDireccionService extends BaseService<UsuarioDireccion, Long>
     }
 
     @Transactional
-    public List<Direccion> direcionesPorUsuario(Long usuarioId) throws Exception {
-        try {
-            return usuarioDireccionRepository.getDireccionesPorUsuario(usuarioId);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+    public List<Direccion> direcionesPorUsuario(Long usuarioId) {
+        return usuarioDireccionRepository.getDireccionesPorUsuario(usuarioId);
     }
 
     @Transactional
     public void agregarDireccion(Long id, Direccion direccion) throws Exception {
-        try	{
-            Usuario usuario = usuarioRepository.findById(id).orElse(null);
+            Usuario usuario = usuarioRepository.findById(id)
+                    .orElseThrow(() -> new Exception("No se encontro el usuario"));
             direccionRepository.save(direccion);
             UsuarioDireccion relacion = UsuarioDireccion.builder()
                     .usuario(usuario)
                     .direccion(direccion)
                     .build();
             usuarioDireccionRepository.save(relacion);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
     }
 }

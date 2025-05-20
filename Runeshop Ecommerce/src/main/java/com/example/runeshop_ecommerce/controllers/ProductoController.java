@@ -30,43 +30,60 @@ public class ProductoController extends BaseController<Producto, Long> {
             String nombre,
             String cateoria
     ) throws Exception {
-        List<Producto> productos = productoService.filtroProd(sexo, marca, talleNumero, tipoProducto, nombre, cateoria);
-        if (productos.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(productos);
+        try {
+            List<Producto> productos = productoService.filtroProd(sexo, marca, talleNumero, tipoProducto, nombre, cateoria);
+            if (productos.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.ok(productos);
+            }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
+
     }
 
     @GetMapping("/filtro_precio")
     public ResponseEntity<List<Producto>> filtrarPorPrecio(
             @RequestParam Double min, Double max
     ) throws Exception {
-        List<Producto> productos = productoService.filtrarPorPrecio(min, max);
-        if (productos.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(productos);
+        try {
+            List<Producto> productos = productoService.filtrarPorPrecio(min, max);
+            if (productos.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.ok(productos);
+            }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
     }
 
     @GetMapping("/ord_asc")
     public ResponseEntity<List<Producto>> ordenarPrecioAscendente() throws Exception {
-        List<Producto> productos = productoService.ordenarPrecioAscendente();
-        if (productos.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(productos);
+        try {
+            List<Producto> productos = productoService.ordenarPrecioAscendente();
+            if (productos.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.ok(productos);
+            }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
     }
 
     @GetMapping("/ord_desc")
     public ResponseEntity<List<Producto>> ordenarPrecioDescendente() throws Exception {
-        List<Producto> productos = productoService.ordenarPrecioDescendente();
-        if (productos.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(productos);
+        try {
+            List<Producto> productos = productoService.ordenarPrecioDescendente();
+            if (productos.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.ok(productos);
+            }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
     }
 }

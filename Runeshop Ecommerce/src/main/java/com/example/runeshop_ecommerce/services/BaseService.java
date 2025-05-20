@@ -28,7 +28,7 @@ public abstract class BaseService<E extends Base, ID extends Serializable> {
     @Transactional
     public Optional<E> findByID(ID id) throws Exception {
         try {
-            return Optional.of(baseRepository.findById(id)).orElse(null);
+            return Optional.of(baseRepository.findById(id)).orElseThrow(() -> new Exception("Id no encontrado"));
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
