@@ -23,7 +23,6 @@ import java.util.List;
 @Builder
 public class Imagen extends Base {
 
-
     @NotBlank
     private String nombre;
 
@@ -36,12 +35,9 @@ public class Imagen extends Base {
     @JsonBackReference
     private List<Detalle> detalles;
 
-    @NotBlank
-    private String imagenId;
 
-    public Imagen(String nombre, String imagenUrl, String imagenId) {
+    public Imagen(String nombre, String imagenUrl) {
         this.nombre = nombre;
         this.imagenUrl = imagenUrl;
-        this.imagenId = imagenId;
     }
 }

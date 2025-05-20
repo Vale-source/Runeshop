@@ -5,6 +5,7 @@ import com.example.runeshop_ecommerce.repositories.ImagenRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.Map;
 
@@ -19,19 +20,24 @@ public class ImagenService extends BaseService<Imagen, Long> {
         super(imagenRepository);
     }
 
-    Imagen subirImagen(MultipartFile file) throws IOException {
-        Map subirResultado = cloudinaryService.upload(file);
-        String imagenUrl = subirResultado.get("url").toString();
-        String imagenId = subirResultado.get("public_id").toString();
+    public Imagen subirImagen(MultipartFile file) throws IOException {
+        Map<String, Object> resultado = cloudinaryService.upload(file);
+        String url = resultado.get("url").toString();
+
         Imagen imagen = Imagen.builder()
                 .nombre(file.getOriginalFilename())
-                .imagenUrl(imagenUrl)
-                .imagenId(imagenId)
+                .imagenUrl(url)
                 .build();
+
         return imagenRepository.save(imagen);
     }
 
-    void borrarImagen(Imagen imagen) throws IOException {
-        
+    public void borrarImagen(Long imagenId) throws Exception {
+        Imagen imagen = imagenRepository.findById(imagenId)
+                .orElseThrow(() -> new Exception("Imagen no encontrada"));
+
+        cloudinaryService.delete(imagen.getImagenUrl());
+        imagenRepository.deleteById(imagenId);
     }
+
 }

@@ -34,12 +34,12 @@ public class Detalle extends Base{
     @JsonProperty("marca")
     @NotNull(message = "La marca del producto no puede ser nulo")
     @Column(name = "marca", nullable = false)
-    private Enum<Marca> marca;
+    private Marca marca;
 
     @JsonProperty("stock")
     @NotNull(message = "El stock del producto no puede ser nulo")
     @Column(name = "stock", nullable = false)
-    private Number stock;
+    private Integer stock;
 
     @ManyToOne
     @JsonBackReference
@@ -64,8 +64,8 @@ public class Detalle extends Base{
     @JsonManagedReference
     @JoinTable(
             name = "detalle_imagen",
-            joinColumns = @JoinColumn(name = "detalle_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "imagen_id", nullable = false)
+            joinColumns = @JoinColumn(name = "detalle_id"),
+            inverseJoinColumns = @JoinColumn(name = "imagen_id")
     )
     private List<Imagen> imagenes;
 
