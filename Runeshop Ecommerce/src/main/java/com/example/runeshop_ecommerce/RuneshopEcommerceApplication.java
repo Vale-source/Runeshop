@@ -1,9 +1,9 @@
 package com.example.runeshop_ecommerce;
 
-import com.example.runeshop_ecommerce.entities.Direccion;
-import com.example.runeshop_ecommerce.entities.Usuario;
-import com.example.runeshop_ecommerce.entities.UsuarioDireccion;
+import com.example.runeshop_ecommerce.entities.*;
+import com.example.runeshop_ecommerce.entities.enums.Marca;
 import com.example.runeshop_ecommerce.entities.enums.Role;
+import com.example.runeshop_ecommerce.entities.enums.TipoProducto;
 import com.example.runeshop_ecommerce.repositories.*;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
@@ -64,6 +64,42 @@ public class RuneshopEcommerceApplication {
                         .build();
                 usuarioDireccionRepository.save(usuarioDireccion);
 
+                //Talle
+                Talle talle = Talle.builder()
+                        .numero(43)
+                        .build();
+
+                //Categoria
+                Categoria categoria = Categoria.builder()
+                        .nombre("Urbano")
+                        .build();
+
+                //Producto
+                Producto producto = Producto.builder()
+                        .modelo("Jordan No Fake")
+                        .sexo("Hombre")
+                        .tipoProducto(TipoProducto.ZAPATILLA)
+                        .build();
+
+                //Precio
+                Precio precio = Precio.builder()
+                        .precioCompra(23000.56)
+                        .precioVenta(25000.00)
+                        .build();
+
+                //Imagen
+                Imagen imagen = Imagen.builder()
+                        .nombre("Jordan No Fake img")
+                        .imagenUrl("htpp//prueba")
+                        .build();
+
+                //Detalle
+//                Detalle detalle = Detalle.builder()
+//                        .marca(Marca.ADIDAS)
+//                        .stock(100)
+//                        .color("Rojo")
+//                        .estado(true)
+//                        .
 
             } catch (Exception e) {
                 throw new Exception(e.getMessage());
