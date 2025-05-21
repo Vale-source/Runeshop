@@ -42,12 +42,12 @@ public class Detalle extends Base{
     private Integer stock;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference("producto-detalle")
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
     @ManyToMany
-    @JsonManagedReference
+    @JsonManagedReference("detalle-talle")
     @JoinTable(
             name = "detalle_talle",
             joinColumns = @JoinColumn(name = "detalle_id", nullable = false),
@@ -56,12 +56,12 @@ public class Detalle extends Base{
     private List<Talle> talles;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference("precio-detalle")
     @JoinColumn(name = "precio_id", nullable = false)
     private Precio precio;
 
     @ManyToMany
-    @JsonManagedReference
+    @JsonManagedReference("detalle-imagen")
     @JoinTable(
             name = "detalle_imagen",
             joinColumns = @JoinColumn(name = "detalle_id"),
@@ -70,6 +70,6 @@ public class Detalle extends Base{
     private List<Imagen> imagenes;
 
     @ManyToMany
-    @JsonBackReference
+    @JsonBackReference("ordenCompras-detalle")
     private List<OrdenCompra> ordenCompras;
 }

@@ -21,7 +21,8 @@ public class DetalleService extends BaseService<Detalle, Long> {
     }
 
     @Transactional
-    public Detalle saveDetalle(Detalle detalle, MultipartFile file) throws Exception {
+    public Detalle saveImagenInDetalle(Long detalleId, MultipartFile file) throws Exception {
+        Detalle detalle = detalleRepository.findById(detalleId).orElseThrow(() -> new Exception("No se encontro el detalle"));
         if (file != null && !file.isEmpty()) {
             Imagen imagen = imagenService.subirImagen(file);
             agregarImagenAlDetalle(detalle, imagen);

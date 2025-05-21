@@ -26,7 +26,7 @@ public class Categoria extends Base {
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @JsonManagedReference
+    @JsonManagedReference("categoria-producto")
     @OneToMany(mappedBy = "categoria")
     private List<Producto> productos;
 }

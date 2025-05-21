@@ -33,12 +33,12 @@ public class OrdenCompra extends Base{
     private Date fechaCompra;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference("usuarioDireccion-ordenCompras")
     @JoinColumn(name = "id_usuario_direccion")
     private UsuarioDireccion usuarioDireccion;
 
     @ManyToMany
-    @JsonManagedReference
+    @JsonManagedReference("ordenCompras-detalle")
     @JoinTable(
             name = "ordenCompra_detalle",
             joinColumns = @JoinColumn(name = "ordeCompra_id"),

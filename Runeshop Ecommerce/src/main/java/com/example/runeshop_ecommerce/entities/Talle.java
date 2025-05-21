@@ -25,6 +25,6 @@ public class Talle extends Base{
     private Integer numero;
 
     @ManyToMany(mappedBy = "talles")
-    @JsonBackReference
+    @JsonBackReference("detalle-talle")
     private List<Detalle> detalles;
 }

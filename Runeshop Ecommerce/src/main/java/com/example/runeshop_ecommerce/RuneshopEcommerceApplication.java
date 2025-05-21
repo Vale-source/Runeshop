@@ -11,6 +11,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.List;
+
 @SpringBootApplication
 public class RuneshopEcommerceApplication {
 
@@ -36,7 +38,7 @@ public class RuneshopEcommerceApplication {
     ) {
         return args -> {
             try {
-                //usuarios
+                // Usuario
                 Usuario usuario = Usuario.builder()
                         .nombre("Juan")
                         .apellido("Perez")
@@ -48,7 +50,7 @@ public class RuneshopEcommerceApplication {
                         .build();
                 usuarioRepository.save(usuario);
 
-                // direcciones
+                // Direccion
                 Direccion direccion = Direccion.builder()
                         .localidad("Ciudad Autónoma de Buenos Aires")
                         .departamento("Palermo")
@@ -57,49 +59,82 @@ public class RuneshopEcommerceApplication {
                         .build();
                 direccionRepository.save(direccion);
 
-                // usuarioDireccion
+                // UsuarioDireccion
                 UsuarioDireccion usuarioDireccion = UsuarioDireccion.builder()
                         .usuario(usuario)
                         .direccion(direccion)
                         .build();
                 usuarioDireccionRepository.save(usuarioDireccion);
 
-                //Talle
+                // Talle
                 Talle talle = Talle.builder()
                         .numero(43)
                         .build();
+                talleRepository.save(talle);
 
-                //Categoria
+                // Categoria
                 Categoria categoria = Categoria.builder()
                         .nombre("Urbano")
                         .build();
+                categoriaRepository.save(categoria);
 
-                //Producto
-                Producto producto = Producto.builder()
-                        .modelo("Jordan No Fake")
-                        .sexo("Hombre")
-                        .tipoProducto(TipoProducto.ZAPATILLA)
+                // Imagen
+                Imagen imagen = Imagen.builder()
+                        .nombre("Jordan No Fake img")
+                        .imagenUrl(null)
                         .build();
+                imagenRepository.save(imagen);
 
-                //Precio
+                // Precio
                 Precio precio = Precio.builder()
                         .precioCompra(23000.56)
                         .precioVenta(25000.00)
                         .build();
+                precioRepository.save(precio);
 
-                //Imagen
-                Imagen imagen = Imagen.builder()
-                        .nombre("Jordan No Fake img")
-                        .imagenUrl("htpp//prueba")
+                // Producto
+                Producto producto = Producto.builder()
+                        .modelo("Jordan No Fake")
+                        .sexo("Hombre")
+                        .tipoProducto(TipoProducto.ZAPATILLA)
+                        .categoria(categoria)
                         .build();
+                productoRepository.save(producto);
 
-                //Detalle
-//                Detalle detalle = Detalle.builder()
-//                        .marca(Marca.ADIDAS)
-//                        .stock(100)
-//                        .color("Rojo")
-//                        .estado(true)
-//                        .
+                // Detalle
+                Detalle detalle = Detalle.builder()
+                        .marca(Marca.ADIDAS)
+                        .stock(100)
+                        .color("Rojo")
+                        .estado(true)
+                        .producto(producto)
+                        .precio(precio)
+                        .talles(List.of(talle))
+                        .imagenes(List.of(imagen))
+                        .build();
+                detalleRepository.save(detalle);
+
+                // OrdenCompra
+                OrdenCompra ordenCompra = OrdenCompra.builder()
+                        .total(25000.00f)
+                        .fechaCompra(new java.util.Date())
+                        .usuarioDireccion(usuarioDireccion)
+                        .detalles(List.of(detalle))
+                        .build();
+                ordenCompraRepository.save(ordenCompra);
+
+                // Descuento
+                Descuento descuento = Descuento.builder()
+                        .fechaInicio(new java.util.Date())
+                        .fechaFinal(new java.util.Date(System.currentTimeMillis() + 86400000L)) // +1 día
+                        .porcentaje(10)
+                        .precios(List.of(precio))
+                        .build();
+                descuentoRepository.save(descuento);
+
+                // Actualizar relaciones entre Precio y Descuento
+                precio.setDescuentos(List.of(descuento));
+                precioRepository.save(precio);
 
             } catch (Exception e) {
                 throw new Exception(e.getMessage());

@@ -39,7 +39,7 @@ public class Descuento extends Base{
     @Column(name = "porcentaje", nullable = false)
     private Number porcentaje;
 
-    @JsonBackReference
+    @JsonBackReference("precio-descuento")
     @ManyToMany(mappedBy = "descuentos")
     private List<Precio> precios;
 }

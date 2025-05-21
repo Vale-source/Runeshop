@@ -27,12 +27,12 @@ public class Imagen extends Base {
     private String nombre;
 
     @JsonProperty("imagenUrl")
-    @NotNull(message = "La URL no puede ser nulo")
-    @JoinColumn(name = "imagenUrl", nullable = false)
+//    @NotNull(message = "La URL no puede ser nulo")
+//    @JoinColumn(name = "imagenUrl", nullable = false)
     private String imagenUrl;
 
     @ManyToMany(mappedBy = "imagenes")
-    @JsonBackReference
+    @JsonBackReference("detalle-imagen")
     private List<Detalle> detalles;
 
 

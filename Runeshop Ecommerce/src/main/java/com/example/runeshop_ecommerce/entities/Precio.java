@@ -30,11 +30,11 @@ public class Precio extends Base {
     private Double precioVenta;
 
     @OneToMany(mappedBy = "precio")
-    @JsonManagedReference
+    @JsonManagedReference("precio-detalle")
     private List<Detalle> detalles;
 
     @ManyToMany
-    @JsonManagedReference
+    @JsonManagedReference("precio-descuento")
     @JoinTable(
             name = "precio_descuento",
             joinColumns = @JoinColumn(name = "precio_id"),

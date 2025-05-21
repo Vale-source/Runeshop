@@ -33,16 +33,17 @@ public class Producto extends Base{
 
     @JsonProperty("tipoProducto")
     @NotNull(message = "El tipo de producto no puede ser nulo")
+    @Enumerated(EnumType.STRING)
     @Column(name = "tipo_producto", nullable = false)
     private TipoProducto tipoProducto;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference("categoria-producto")
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
     @OneToMany(mappedBy = "producto")
-    @JsonManagedReference
+    @JsonManagedReference("producto-detalles")
     private List<Detalle> detalles;
 
 }

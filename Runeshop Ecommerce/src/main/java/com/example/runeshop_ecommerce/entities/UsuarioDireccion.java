@@ -19,17 +19,17 @@ import java.util.List;
 public class UsuarioDireccion extends Base {
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference("usuario-usuarioDireccion")
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference("direccion-usuariodDireccion")
     @JoinColumn(name = "direccion_id")
     private Direccion direccion;
 
     @OneToMany
-    @JsonManagedReference
+    @JsonManagedReference("usuarioDireccion-ordenCompras")
     @JoinColumn(name = "oredenes_de_compra")
     private List<OrdenCompra> ordenCompras;
 }

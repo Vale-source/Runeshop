@@ -61,7 +61,7 @@ public class Usuario extends Base implements UserDetails {
     private Integer dni;
 
     @OneToMany(mappedBy = "usuario")
-    @JsonManagedReference
+    @JsonManagedReference("usuario-usuarioDireccion")
     private List<UsuarioDireccion> usuariosDirecciones;
 
     @Override

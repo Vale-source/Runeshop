@@ -40,6 +40,6 @@ public class Direccion extends Base{
     private String pais;
 
     @OneToMany(mappedBy = "direccion")
-    @JsonManagedReference
+    @JsonManagedReference("direccion-usuariodDireccion")
     private List<UsuarioDireccion> usuariosDirecciones;
 }
