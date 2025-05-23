@@ -16,10 +16,10 @@ public interface DetalleRepository extends BaseRepository<Detalle, Long> {
     @Query("SELECT DISTINCT d.producto " +
             "FROM Detalle d " +
             "WHERE d.precio.precioVenta " +
-            "BETWEEN :precio_min AND :precio_max")
+            "BETWEEN :min AND :max")
     List<Producto> filtroPrecio(
-            @Param("min") Double precio_min,
-            @Param("max") Double precio_max
+            @Param("min") Double min,
+            @Param("max") Double max
             );
 
     @Query("SELECT d.producto " +

@@ -1,9 +1,7 @@
 package com.example.runeshop_ecommerce.entities;
 
 import com.example.runeshop_ecommerce.entities.enums.TipoProducto;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
+@JsonPropertyOrder({ "id", "modelo", "sexo", "tipoProducto"})
 public class Producto extends Base{
 
     @JsonProperty("modelo")
@@ -38,12 +37,12 @@ public class Producto extends Base{
     private TipoProducto tipoProducto;
 
     @ManyToOne
-    @JsonBackReference("categoria-producto")
+    @JsonIgnoreProperties("productos")
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
     @OneToMany(mappedBy = "producto")
-    @JsonManagedReference("producto-detalles")
+    @JsonIgnoreProperties("producto")
     private List<Detalle> detalles;
 
 }

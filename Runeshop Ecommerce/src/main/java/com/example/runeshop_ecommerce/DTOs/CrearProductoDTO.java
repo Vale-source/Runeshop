@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CrearProductoDTO {
+    @JsonProperty("categoriaId")
+    private Long categoriaId;
 
     @JsonProperty("modelo")
     private String modelo;
@@ -29,25 +31,5 @@ public class CrearProductoDTO {
     @JsonProperty("tipoProducto")
     private TipoProducto tipoProducto;
 
-    @JsonProperty("categoriaId")
-    private Long categoriaId;
-
-    @JsonProperty("color")
-    private String color;
-
-    @JsonProperty("estado")
-    private boolean estado;
-
-    @JsonProperty("marca")
-    private Marca marca;
-
-    @JsonProperty("stock")
-    private Integer stock;
-
-    @JsonProperty("talles")
-    private List<Talle> talles;
-
-    @JsonProperty("precio")
-    private Precio precio;
 }
 

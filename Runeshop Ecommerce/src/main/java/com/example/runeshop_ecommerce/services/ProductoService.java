@@ -1,5 +1,6 @@
 package com.example.runeshop_ecommerce.services;
 
+import com.example.runeshop_ecommerce.DTOs.CrearDetalleDTO;
 import com.example.runeshop_ecommerce.DTOs.CrearProductoDTO;
 import com.example.runeshop_ecommerce.entities.*;
 import com.example.runeshop_ecommerce.entities.enums.Marca;
@@ -17,20 +18,24 @@ import java.util.List;
 @Service
 public class ProductoService extends BaseService<Producto, Long> {
 
-    private DetalleRepository detalleRepository;
-    private ProductoRepository productoRepository;
-    private DetalleService detalleService;
-    private CategoriaRepository categoriaRepository;
+    private final DetalleRepository detalleRepository;
+    private final ProductoRepository productoRepository;
+    private final CategoriaRepository categoriaRepository;
 
-    public ProductoService(ProductoRepository productoRepository){
+    public ProductoService(ProductoRepository productoRepository, DetalleRepository detalleRepository, ProductoRepository productoRepository1, CategoriaRepository categoriaRepository){
         super(productoRepository);
+        this.detalleRepository = detalleRepository;
+        this.productoRepository = productoRepository1;
+        this.categoriaRepository = categoriaRepository;
     }
 
     @Transactional
     public Producto crearProducto (
-            CrearProductoDTO dto,
-            MultipartFile file
+            CrearProductoDTO dto
     ) throws Exception {
+        if (dto != null) {
+            System.out.println("Modelo: " + dto.getModelo());
+        }
         Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
                 .orElseThrow(() -> new Exception("Categoria no encontrada"));
 
@@ -39,28 +44,9 @@ public class ProductoService extends BaseService<Producto, Long> {
                 .sexo(dto.getSexo())
                 .tipoProducto(dto.getTipoProducto())
                 .categoria(categoria)
+                .detalles(new ArrayList<>())
                 .build();
         productoRepository.save(producto);
-
-        Detalle detalle = Detalle.builder()
-                .color(dto.getColor())
-                .estado(dto.isEstado())
-                .marca(dto.getMarca())
-                .stock(dto.getStock())
-                .talles(dto.getTalles())
-                .precio(dto.getPrecio())
-                .producto(producto)
-                .build();
-        detalleRepository.save(detalle);
-
-        if ( producto.getDetalles() == null || producto.getDetalles().isEmpty()) {
-            producto.setDetalles(new ArrayList<>());
-        }
-
-        producto.getDetalles().add(detalle);
-
-        detalleService.saveImagenInDetalle(detalle.getId(), file);
-
         return producto;
     }
 
@@ -80,6 +66,10 @@ public class ProductoService extends BaseService<Producto, Long> {
     public List<Producto> filtrarPorPrecio(Double min, Double max) throws Exception {
         if (min.isNaN() || max.isNaN()) {
             throw new Exception("Ingrese valores validos para el filtro");
+        }
+
+        if (min > max) {
+            throw new IllegalArgumentException("El valor de 'min' no puede ser mayor que 'max'.");
         }
         return detalleRepository.filtroPrecio(min, max);
     }

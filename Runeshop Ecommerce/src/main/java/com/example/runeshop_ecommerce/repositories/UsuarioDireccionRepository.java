@@ -11,9 +11,7 @@ import java.util.List;
 @Repository
 public interface UsuarioDireccionRepository extends BaseRepository<UsuarioDireccion, Long> {
 
-    @Query("SELECT ud.direccion.localidad, ud.direccion.departamento, ud.direccion.provincia, ud.direccion.pais " +
-            "FROM UsuarioDireccion ud " +
-            "WHERE (:usuarioId = ud.usuario.id)")
+    @Query("SELECT ud.direccion FROM UsuarioDireccion ud WHERE ud.usuario.id = :usuarioId")
     List<Direccion> getDireccionesPorUsuario(
             @Param("usuarioId") Long usuarioId
     );

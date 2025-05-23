@@ -1,8 +1,6 @@
 package com.example.runeshop_ecommerce.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.DatabindException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
+@JsonPropertyOrder({ "id", "total", "fechaCompra" })
 public class OrdenCompra extends Base{
 
     @JsonProperty("total")
@@ -33,12 +32,12 @@ public class OrdenCompra extends Base{
     private Date fechaCompra;
 
     @ManyToOne
-    @JsonBackReference("usuarioDireccion-ordenCompras")
+    @JsonIgnoreProperties("ordenCompras")
     @JoinColumn(name = "id_usuario_direccion")
     private UsuarioDireccion usuarioDireccion;
 
     @ManyToMany
-    @JsonManagedReference("ordenCompras-detalle")
+    @JsonIgnoreProperties("ordenCompras")
     @JoinTable(
             name = "ordenCompra_detalle",
             joinColumns = @JoinColumn(name = "ordeCompra_id"),

@@ -10,10 +10,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/detalle")
 public class DetalleController extends BaseController<Detalle, Long> {
 
-    private DetalleService detalleService;
+    private final DetalleService detalleService;
 
-    public DetalleController(DetalleService detalleService) {
+    public DetalleController(DetalleService detalleService, DetalleService detalleService1) {
         super(detalleService);
+        this.detalleService = detalleService1;
     }
 
     @PutMapping("/actualizarImagenDetalle")

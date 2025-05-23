@@ -1,16 +1,15 @@
 package com.example.runeshop_ecommerce.controllers;
 
 
+import com.example.runeshop_ecommerce.DTOs.CrearDetalleDTO;
 import com.example.runeshop_ecommerce.DTOs.CrearProductoDTO;
-import com.example.runeshop_ecommerce.entities.Precio;
+import com.example.runeshop_ecommerce.entities.Detalle;
 import com.example.runeshop_ecommerce.entities.Producto;
-import com.example.runeshop_ecommerce.entities.Talle;
 import com.example.runeshop_ecommerce.entities.enums.Marca;
 import com.example.runeshop_ecommerce.entities.enums.TipoProducto;
 import com.example.runeshop_ecommerce.services.DetalleService;
 import com.example.runeshop_ecommerce.services.ProductoService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,36 +23,28 @@ import java.util.Map;
 @RequestMapping("/producto")
 public class ProductoController extends BaseController<Producto, Long> {
 
-    private ProductoService productoService;
-    private DetalleService detalleService;
+    private final ProductoService productoService;
+    private final DetalleService detalleService;
 
-    public ProductoController(ProductoService productoService) {
+    public ProductoController(ProductoService productoService, ProductoService productoService1, DetalleService detalleService) {
         super(productoService);
+        this.productoService = productoService1;
+        this.detalleService = detalleService;
     }
 
-    @PostMapping("/crear_producto")
-    public ResponseEntity<?> crearProducto (
-            @RequestPart("imagen") MultipartFile file,
-            @RequestPart("producto")CrearProductoDTO dto
-            ) {
+    @PostMapping( "/crear_producto")
+    public ResponseEntity<Detalle> crearProducto (
+            @RequestPart(value = "imagen", required = false) MultipartFile file,
+            @RequestPart("producto") CrearProductoDTO productoDTO,
+            @RequestPart("detalle") CrearDetalleDTO detalleDTO
+            ) throws Exception {
         try {
-            Producto producto = productoService.crearProducto(dto, file);
+            Producto producto = productoService.crearProducto(productoDTO);
+            Detalle detalle = detalleService.crearDetalle(file, detalleDTO, producto);
 
-            String imagenUrl = producto.getDetalles().get(0).getImagenes().get(0).getImagenUrl();
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Producto creado exitosamente");
-            response.put("imagenUrl", imagenUrl);
-            response.put("producto", producto);
-
-            System.out.println(">>> Entrando al endpoint de crear producto <<<");
-            System.out.println("DTO recibido: " + dto);
-            System.out.println("Archivo recibido: " + file.getOriginalFilename());
-
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            return ResponseEntity.ok(detalle);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            throw new Exception(e.getMessage());
         }
     }
 
@@ -63,11 +54,11 @@ public class ProductoController extends BaseController<Producto, Long> {
             @RequestParam(required = false) Marca marca,
             @RequestParam(required = false) Integer talleNumero,
             @RequestParam(required = false) TipoProducto tipoProducto,
-            @RequestParam(required = false)  String nombre,
-            @RequestParam(required = false) String cateoria
+            @RequestParam(required = false)  String modelo,
+            @RequestParam(required = false) String categoria
     ) throws Exception {
         try {
-            List<Producto> productos = productoService.filtroProd(sexo, marca, talleNumero, tipoProducto, nombre, cateoria);
+            List<Producto> productos = productoService.filtroProd(sexo, marca, talleNumero, tipoProducto, modelo, categoria);
             if (productos.isEmpty()) {
                 return ResponseEntity.noContent().build();
             } else {
@@ -81,9 +72,11 @@ public class ProductoController extends BaseController<Producto, Long> {
 
     @GetMapping("/filtro_precio")
     public ResponseEntity<List<Producto>> filtrarPorPrecio(
-            @RequestParam Double min, Double max
+            @RequestParam(value = "min", required = true) Double min,
+            @RequestParam(name = "max", required = true) Double max
     ) throws Exception {
         try {
+
             List<Producto> productos = productoService.filtrarPorPrecio(min, max);
             if (productos.isEmpty()) {
                 return ResponseEntity.noContent().build();

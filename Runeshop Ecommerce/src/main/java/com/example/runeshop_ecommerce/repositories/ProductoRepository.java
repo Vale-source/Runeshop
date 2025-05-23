@@ -15,7 +15,7 @@ public interface ProductoRepository extends BaseRepository<Producto, Long> {
     @Query("SELECT DISTINCT p " +
             "FROM Producto p " +
             "JOIN p.detalles d " +
-            "JOIN d.talles t " +
+            "JOIN d.talle t " +
             "WHERE (:sexoParam IS NULL OR :sexoParam = p.sexo) " +
             "AND (:marcaParam IS NULL OR :marcaParam = d.marca) " +
             "AND (:talleParam IS NULL OR :talleParam = t.numero) " +

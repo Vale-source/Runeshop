@@ -14,12 +14,15 @@ import java.util.List;
 @Service
 public class UsuarioDireccionService extends BaseService<UsuarioDireccion, Long> {
 
-    private UsuarioRepository usuarioRepository;
-    private DireccionRepository direccionRepository;
-    private UsuarioDireccionRepository usuarioDireccionRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final DireccionRepository direccionRepository;
+    private final UsuarioDireccionRepository usuarioDireccionRepository;
 
-    public UsuarioDireccionService(UsuarioDireccionRepository usuarioDireccionRepository) {
+    public UsuarioDireccionService(UsuarioDireccionRepository usuarioDireccionRepository, UsuarioRepository usuarioRepository, DireccionRepository direccionRepository, UsuarioDireccionRepository usuarioDireccionRepository1) {
         super(usuarioDireccionRepository);
+        this.usuarioRepository = usuarioRepository;
+        this.direccionRepository = direccionRepository;
+        this.usuarioDireccionRepository = usuarioDireccionRepository1;
     }
 
     @Transactional

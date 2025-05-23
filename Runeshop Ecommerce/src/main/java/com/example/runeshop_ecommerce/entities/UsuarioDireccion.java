@@ -1,6 +1,7 @@
 package com.example.runeshop_ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,17 +20,17 @@ import java.util.List;
 public class UsuarioDireccion extends Base {
 
     @ManyToOne
-    @JsonBackReference("usuario-usuarioDireccion")
+    @JsonIgnoreProperties("usuariosDirecciones")
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
     @ManyToOne
-    @JsonBackReference("direccion-usuariodDireccion")
+    @JsonIgnoreProperties("usuariosDirecciones")
     @JoinColumn(name = "direccion_id")
     private Direccion direccion;
 
     @OneToMany
-    @JsonManagedReference("usuarioDireccion-ordenCompras")
+    @JsonIgnoreProperties("usuariosDirecciones")
     @JoinColumn(name = "oredenes_de_compra")
     private List<OrdenCompra> ordenCompras;
 }

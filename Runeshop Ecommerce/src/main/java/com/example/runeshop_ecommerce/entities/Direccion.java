@@ -1,7 +1,9 @@
 package com.example.runeshop_ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
+@JsonPropertyOrder({ "id", "localidad", "departamento", "provincia", "pais" })
 public class Direccion extends Base{
 
     @JsonProperty("localidad")
@@ -40,6 +43,6 @@ public class Direccion extends Base{
     private String pais;
 
     @OneToMany(mappedBy = "direccion")
-    @JsonManagedReference("direccion-usuariodDireccion")
+    @JsonIgnoreProperties("direccion")
     private List<UsuarioDireccion> usuariosDirecciones;
 }

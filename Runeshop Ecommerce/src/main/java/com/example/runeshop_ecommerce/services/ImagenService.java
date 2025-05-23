@@ -12,12 +12,13 @@ import java.util.Map;
 @Service
 public class ImagenService extends BaseService<Imagen, Long> {
 
-    private CloudinaryService cloudinaryService;
-    private ImagenRepository imagenRepository;
+    private final CloudinaryService cloudinaryService;
+    private final ImagenRepository imagenRepository;
 
-
-    public ImagenService(ImagenRepository imagenRepository) {
+    public ImagenService(ImagenRepository imagenRepository, CloudinaryService cloudinaryService) {
         super(imagenRepository);
+        this.imagenRepository = imagenRepository;
+        this.cloudinaryService = cloudinaryService;
     }
 
     public Imagen subirImagen(MultipartFile file) throws IOException {

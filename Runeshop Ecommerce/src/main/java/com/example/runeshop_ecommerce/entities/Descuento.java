@@ -1,8 +1,6 @@
 package com.example.runeshop_ecommerce.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
@@ -22,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
+@JsonPropertyOrder({ "id", "fechaInicio", "fechaFinal", "porcentaje" })
 public class Descuento extends Base{
 
     @JsonProperty("fechaInicio")
@@ -39,7 +38,7 @@ public class Descuento extends Base{
     @Column(name = "porcentaje", nullable = false)
     private Number porcentaje;
 
-    @JsonBackReference("precio-descuento")
+    @JsonIgnoreProperties("descuentos")
     @ManyToMany(mappedBy = "descuentos")
     private List<Precio> precios;
 }

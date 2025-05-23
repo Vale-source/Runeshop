@@ -1,9 +1,7 @@
 package com.example.runeshop_ecommerce.entities;
 
 import com.example.runeshop_ecommerce.entities.enums.Marca;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
+@JsonPropertyOrder({ "id", "color", "estado", "marca", "stock"})
 public class Detalle extends Base{
 
     @JsonProperty("color")
@@ -33,6 +32,7 @@ public class Detalle extends Base{
 
     @JsonProperty("marca")
     @NotNull(message = "La marca del producto no puede ser nulo")
+    @Enumerated(EnumType.STRING)
     @Column(name = "marca", nullable = false)
     private Marca marca;
 
@@ -42,26 +42,22 @@ public class Detalle extends Base{
     private Integer stock;
 
     @ManyToOne
-    @JsonBackReference("producto-detalle")
+    @JsonIgnoreProperties("detalles")
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
-    @ManyToMany
-    @JsonManagedReference("detalle-talle")
-    @JoinTable(
-            name = "detalle_talle",
-            joinColumns = @JoinColumn(name = "detalle_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "talle_id", nullable = false)
-    )
-    private List<Talle> talles;
+    @ManyToOne
+    @JsonIgnoreProperties("detalles")
+    @JoinColumn(name = "talle_id", nullable = false)
+    private Talle talle;
 
     @ManyToOne
-    @JsonBackReference("precio-detalle")
+    @JsonIgnoreProperties("detalles")
     @JoinColumn(name = "precio_id", nullable = false)
     private Precio precio;
 
     @ManyToMany
-    @JsonManagedReference("detalle-imagen")
+    @JsonIgnoreProperties("detalles")
     @JoinTable(
             name = "detalle_imagen",
             joinColumns = @JoinColumn(name = "detalle_id"),
@@ -70,6 +66,6 @@ public class Detalle extends Base{
     private List<Imagen> imagenes;
 
     @ManyToMany
-    @JsonBackReference("ordenCompras-detalle")
+    @JsonIgnoreProperties("detalles")
     private List<OrdenCompra> ordenCompras;
 }

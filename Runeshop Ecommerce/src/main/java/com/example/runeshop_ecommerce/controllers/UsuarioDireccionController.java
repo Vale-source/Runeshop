@@ -16,10 +16,11 @@ import java.util.List;
 @RequestMapping("/perfil")
 public class UsuarioDireccionController extends BaseController<UsuarioDireccion, Long> {
 
-    private UsuarioDireccionService usuarioDireccionService;
+    private final UsuarioDireccionService usuarioDireccionService;
 
-    public UsuarioDireccionController(UsuarioDireccionService usuarioDireccionService) {
+    public UsuarioDireccionController(UsuarioDireccionService usuarioDireccionService, UsuarioDireccionService usuarioDireccionService1) {
         super(usuarioDireccionService);
+        this.usuarioDireccionService = usuarioDireccionService1;
     }
 
     @GetMapping("/usuarios/{usuarioId}/direcciones")

@@ -11,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
@@ -109,10 +110,13 @@ public class RuneshopEcommerceApplication {
                         .estado(true)
                         .producto(producto)
                         .precio(precio)
-                        .talles(List.of(talle))
+                        .talle(talle)
                         .imagenes(List.of(imagen))
                         .build();
                 detalleRepository.save(detalle);
+                List<Detalle> detalles = new ArrayList<>();
+                detalles.add(detalle);
+                talle.setDetalles(detalles);
 
                 // OrdenCompra
                 OrdenCompra ordenCompra = OrdenCompra.builder()
