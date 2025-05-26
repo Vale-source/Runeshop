@@ -10,10 +10,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@EnableScheduling
 @SpringBootApplication
 public class RuneshopEcommerceApplication {
 
@@ -82,9 +84,19 @@ public class RuneshopEcommerceApplication {
                 // Imagen
                 Imagen imagen = Imagen.builder()
                         .nombre("Jordan No Fake img")
-                        .imagenUrl(null)
+                        .imagenUrl("http://res.cloudinary.com/dpyfse8qb/image/upload/v1748128244/eniss20uamjmqx6dnyjj.jpg")
                         .build();
                 imagenRepository.save(imagen);
+
+                Imagen imagen2 = Imagen.builder()
+                        .nombre("Jordan No Fake img")
+                        .imagenUrl("http://res.cloudinary.com/dpyfse8qb/image/upload/v1748129211/t0a6flafawooaxknq8sz.png")
+                        .build();
+                imagenRepository.save(imagen2);
+
+                List<Imagen> imagenes = new ArrayList<>();
+                imagenes.add(imagen);
+                imagenes.add(imagen2);
 
                 // Precio
                 Precio precio = Precio.builder()
@@ -111,34 +123,53 @@ public class RuneshopEcommerceApplication {
                         .producto(producto)
                         .precio(precio)
                         .talle(talle)
-                        .imagenes(List.of(imagen))
+                        .imagenes(imagenes)
                         .build();
                 detalleRepository.save(detalle);
                 List<Detalle> detalles = new ArrayList<>();
                 detalles.add(detalle);
                 talle.setDetalles(detalles);
 
-                // OrdenCompra
-                OrdenCompra ordenCompra = OrdenCompra.builder()
-                        .total(25000.00f)
-                        .fechaCompra(new java.util.Date())
-                        .usuarioDireccion(usuarioDireccion)
-                        .detalles(List.of(detalle))
-                        .build();
-                ordenCompraRepository.save(ordenCompra);
-
                 // Descuento
-                Descuento descuento = Descuento.builder()
-                        .fechaInicio(new java.util.Date())
-                        .fechaFinal(new java.util.Date(System.currentTimeMillis() + 86400000L)) // +1 día
-                        .porcentaje(10)
-                        .precios(List.of(precio))
+                Descuento noDescuento = Descuento.builder()
+                        .porcentaje("Sin descuento")
+                        .valor(0.0)
                         .build();
-                descuentoRepository.save(descuento);
+                descuentoRepository.save(noDescuento);
+
+                Descuento descuento10 = Descuento.builder()
+                        .porcentaje("10")
+                        .valor(0.10)
+                        .build();
+                descuentoRepository.save(descuento10);
+
+                Descuento descuento20 = Descuento.builder()
+                        .porcentaje("20")
+                        .valor(0.20)
+                        .build();
+                descuentoRepository.save(descuento20);
+
+                Descuento descuento30 = Descuento.builder()
+                        .porcentaje("30")
+                        .valor(0.30)
+                        .build();
+                descuentoRepository.save(descuento30);
+
+                Descuento descuento40 = Descuento.builder()
+                        .porcentaje("40")
+                        .valor(0.40)
+                        .build();
+                descuentoRepository.save(descuento40);
+
+                Descuento descuento50 = Descuento.builder()
+                        .porcentaje("50")
+                        .valor(0.50)
+                        .build();
+                descuentoRepository.save(descuento50);
 
                 // Actualizar relaciones entre Precio y Descuento
-                precio.setDescuentos(List.of(descuento));
-                precioRepository.save(precio);
+//                detalle.setDescuentos(noDescuento);
+//                detalleRepository.save(detalle);
 
             } catch (Exception e) {
                 throw new Exception(e.getMessage());
