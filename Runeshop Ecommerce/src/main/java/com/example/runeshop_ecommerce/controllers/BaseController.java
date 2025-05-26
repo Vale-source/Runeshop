@@ -40,9 +40,10 @@ public abstract class BaseController<E extends Base, ID extends Serializable> {
         return ResponseEntity.ok(updateEntity);
     }
 
-    @DeleteMapping("/{id}")
+    //Borrado Logico
+    @PutMapping("/{id}")
     public void delete(@PathVariable ID id) throws Exception {
-        service.deleteByID(id);
+        service.logicDeletion(id);
     }
 
 }

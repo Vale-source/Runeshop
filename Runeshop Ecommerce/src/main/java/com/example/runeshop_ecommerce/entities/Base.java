@@ -22,4 +22,7 @@ public abstract class Base implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    //Estado para el borrado logico
+    private Boolean estado = true;
 }
