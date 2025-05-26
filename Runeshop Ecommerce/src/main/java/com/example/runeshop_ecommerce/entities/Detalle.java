@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
-@JsonPropertyOrder({ "id", "color", "estado", "marca", "stock"})
+@JsonPropertyOrder({ "id", "color", "estado", "marca", "stock", "descuentos", "precio_descuento" , "inicioDescuento", "finDescuento"})
 public class Detalle extends Base{
 
     @JsonProperty("color")
@@ -40,6 +41,10 @@ public class Detalle extends Base{
     @NotNull(message = "El stock del producto no puede ser nulo")
     @Column(name = "stock", nullable = false)
     private Integer stock;
+
+    @JsonProperty("precio_descuento")
+    @Column(name = "precio_descuento")
+    private Double precioDescuento;
 
     @ManyToOne
     @JsonIgnoreProperties("detalles")
@@ -68,4 +73,20 @@ public class Detalle extends Base{
     @ManyToMany
     @JsonIgnoreProperties("detalles")
     private List<OrdenCompra> ordenCompras;
+
+    @JsonProperty("inicioDescuento")
+    @Column(name = "inicio_descuento")
+    private LocalDateTime inicioDescuento;
+
+    @JsonProperty("finDescuento")
+    @Column(name = "fin_descuento")
+    private LocalDateTime finDescuento;
+
+    @ManyToOne
+    @JsonProperty("descuentos")
+    @JsonIgnoreProperties("detalles")
+    private Descuento descuentos = Descuento.builder()
+            .porcentaje("Sin descuento")
+            .valor(0.0)
+            .build();
 }

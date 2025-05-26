@@ -1,13 +1,73 @@
 package com.example.runeshop_ecommerce.services;
 
+import com.example.runeshop_ecommerce.entities.Detalle;
 import com.example.runeshop_ecommerce.entities.OrdenCompra;
+import com.example.runeshop_ecommerce.entities.UsuarioDireccion;
+import com.example.runeshop_ecommerce.repositories.DetalleRepository;
 import com.example.runeshop_ecommerce.repositories.OrdenCompraRepository;
+import com.example.runeshop_ecommerce.repositories.UsuarioDireccionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class OrdenCompraService extends BaseService<OrdenCompra, Long> {
 
-    public OrdenCompraService(OrdenCompraRepository ordenCompraRepository){
+    private final DetalleRepository detalleRepository;
+    private final UsuarioDireccionRepository usuarioDireccionRepository;
+    private final OrdenCompraRepository ordenCompraRepository;
+
+
+    public OrdenCompraService(OrdenCompraRepository ordenCompraRepository, DetalleRepository detalleRepository, UsuarioDireccionRepository usuarioDireccionRepository, OrdenCompraRepository ordenCompraRepository1){
         super(ordenCompraRepository);
+        this.detalleRepository = detalleRepository;
+        this.usuarioDireccionRepository = usuarioDireccionRepository;
+        this.ordenCompraRepository = ordenCompraRepository1;
+    }
+
+    @Transactional
+    public OrdenCompra generarOrdenCompra(List<Long> detallesId, Long usuarioDireccionId) throws Exception {
+        List<Detalle> detalles = new ArrayList<>();
+        Double precioTotal = 0.0;
+
+        UsuarioDireccion usuarioDireccion = usuarioDireccionRepository.findById(usuarioDireccionId)
+                .orElseThrow(() -> new Exception("No se encontro el usuario"));
+
+        for (Long l : detallesId) {
+            Detalle d = detalleRepository.findById(l)
+                    .orElseThrow(() -> new Exception("No se encontro el detalle"));
+            detalles.add(d);
+        }
+
+        if (usuarioDireccion.getOrdenCompras() == null) {
+            usuarioDireccion.setOrdenCompras(new ArrayList<>());
+        }
+
+
+        for (Detalle d: detalles) {
+            if (d.getDescuentos() != null) {
+                precioTotal += d.getPrecioDescuento();
+            } else {
+                precioTotal += d.getPrecio().getPrecioVenta();
+            }
+        }
+
+        OrdenCompra ordenCompra = OrdenCompra.builder()
+                .total(precioTotal)
+                .fechaCompra(LocalDateTime.now())
+                .usuarioDireccion(usuarioDireccion)
+                .detalles(detalles)
+                .build();
+
+        usuarioDireccion.getOrdenCompras().add(ordenCompra);
+
+        for (Detalle d : detalles) {
+            d.getOrdenCompras().add(ordenCompra);
+        }
+
+        return ordenCompraRepository.save(ordenCompra);
     }
 }

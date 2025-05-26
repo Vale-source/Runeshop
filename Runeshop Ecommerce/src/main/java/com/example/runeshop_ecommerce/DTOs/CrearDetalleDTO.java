@@ -1,5 +1,6 @@
 package com.example.runeshop_ecommerce.DTOs;
 
+import com.example.runeshop_ecommerce.entities.Descuento;
 import com.example.runeshop_ecommerce.entities.Precio;
 import com.example.runeshop_ecommerce.entities.Talle;
 import com.example.runeshop_ecommerce.entities.enums.Marca;
@@ -8,6 +9,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Builder
@@ -32,4 +36,15 @@ public class CrearDetalleDTO {
 
     @JsonProperty("precio")
     private Precio precio;
+
+    @JsonProperty("descuento")
+    private Descuento descuento;
+
+    @JsonProperty("inicioDescuento")
+    private LocalDateTime inicioDescuento;
+
+    @JsonProperty("finDescuento")
+    private LocalDateTime finDescuento;
+
+
 }

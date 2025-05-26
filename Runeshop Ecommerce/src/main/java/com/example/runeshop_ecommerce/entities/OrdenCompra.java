@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -24,12 +25,12 @@ public class OrdenCompra extends Base{
     @JsonProperty("total")
     @NotNull(message = "el total no puede ser nulo")
     @Column(name = "total", nullable = false)
-    private Float total; //Sumatoria de todos los productos
+    private Double total; //Sumatoria de todos los productos
 
     @JsonProperty("fechaCompra")
     @NotNull(message = "la fecha de compra no puede ser nulo")
     @Column(name = "fecha_compra", nullable = false)
-    private Date fechaCompra;
+    private LocalDateTime fechaCompra;
 
     @ManyToOne
     @JsonIgnoreProperties("ordenCompras")

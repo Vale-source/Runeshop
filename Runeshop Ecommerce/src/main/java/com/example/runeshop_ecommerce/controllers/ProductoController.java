@@ -42,7 +42,7 @@ public class ProductoController extends BaseController<Producto, Long> {
             Producto producto = productoService.crearProducto(productoDTO);
             Detalle detalle = detalleService.crearDetalle(file, detalleDTO, producto);
 
-            return ResponseEntity.ok(detalle);
+            return ResponseEntity.status(HttpStatus.CREATED).body(detalle);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

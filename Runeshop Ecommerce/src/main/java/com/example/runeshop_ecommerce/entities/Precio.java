@@ -36,12 +36,5 @@ public class Precio extends Base {
     @JsonIgnoreProperties("precio")
     private List<Detalle> detalles;
 
-    @ManyToMany
-    @JsonIgnoreProperties("precios")
-    @JoinTable(
-            name = "precio_descuento",
-            joinColumns = @JoinColumn(name = "precio_id"),
-            inverseJoinColumns = @JoinColumn(name = "descuento_id")
-    )
-    private List<Descuento> descuentos;
+
 }

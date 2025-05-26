@@ -46,6 +46,7 @@ public class ProductoService extends BaseService<Producto, Long> {
                 .categoria(categoria)
                 .detalles(new ArrayList<>())
                 .build();
+        categoria.getProductos().add(producto);
         productoRepository.save(producto);
         return producto;
     }
