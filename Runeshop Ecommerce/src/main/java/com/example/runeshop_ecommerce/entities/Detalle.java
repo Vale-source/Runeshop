@@ -26,11 +26,6 @@ public class Detalle extends Base{
     @Column(name = "color", nullable = false)
     private String color;
 
-    @JsonProperty("estado")
-    @NotNull(message = "El estado del producto no puede ser nulo")
-    @Column(name = "estado", nullable = false)
-    private boolean estado;
-
     @JsonProperty("marca")
     @NotNull(message = "La marca del producto no puede ser nulo")
     @Enumerated(EnumType.STRING)

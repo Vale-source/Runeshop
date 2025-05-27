@@ -119,7 +119,6 @@ public class RuneshopEcommerceApplication {
                         .marca(Marca.ADIDAS)
                         .stock(100)
                         .color("Rojo")
-                        .estado(true)
                         .producto(producto)
                         .precio(precio)
                         .talle(talle)

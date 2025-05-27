@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class DetalleService extends BaseService<Detalle, Long> {
@@ -36,13 +37,10 @@ public class DetalleService extends BaseService<Detalle, Long> {
 
     @Transactional
     public Detalle crearDetalle (
-            MultipartFile file,
+            List<MultipartFile> files,
             CrearDetalleDTO dto,
             Producto producto
     ) throws Exception {
-        if (file != null) {
-            System.out.println("Nombre de archivo: " + file.getOriginalFilename());
-        }
         Precio precio = precioRepository.findById(dto.getPrecio().getId())
                 .orElseThrow(() -> new Exception("No se contro el id de ese precio"));
 
@@ -51,7 +49,6 @@ public class DetalleService extends BaseService<Detalle, Long> {
 
         Detalle detalle = Detalle.builder()
                 .color(dto.getColor())
-                .estado(dto.isEstado())
                 .marca(dto.getMarca())
                 .stock(dto.getStock())
                 .talle(talle)
@@ -70,17 +67,19 @@ public class DetalleService extends BaseService<Detalle, Long> {
             producto.setDetalles(new ArrayList<>());
         }
 
-        saveImagenInDetalle(detalle.getId(), file);
+        saveImagenInDetalle(detalle.getId(), files);
 
         return detalle;
     }
 
     @Transactional
-    public Detalle saveImagenInDetalle(Long detalleId, MultipartFile file) throws Exception {
-        Detalle detalle = detalleRepository.findById(detalleId).orElseThrow(() -> new Exception("No se encontro el detalle"));
-        if (file != null && !file.isEmpty()) {
-            Imagen imagen = imagenService.subirImagen(file);
-            agregarImagenAlDetalle(detalle, imagen);
+    public Detalle saveImagenInDetalle(Long detalleId, List<MultipartFile> files) throws Exception {
+        Detalle detalle = detalleRepository.findById(detalleId)
+                .orElseThrow(() -> new Exception("No se encontro el detalle"));
+
+        if (files != null && !files.isEmpty()) {
+            List<Imagen> imagenes = imagenService.subirImagen(files);
+            agregarImagenAlDetalle(detalle, imagenes);
         } else {
             throw new Exception("Archivo a subir inexistente");
         }
@@ -97,7 +96,7 @@ public class DetalleService extends BaseService<Detalle, Long> {
                 .findFirst()
                 .orElseThrow(() -> new Exception("Imagen no encontrada"));
 
-        Imagen subirImagen = imagenService.subirImagen(file);
+        Imagen subirImagen = imagenService.actualizarImagen(file);
 
 
         detalle.getImagenes().remove(imagenAReemplazar);
@@ -107,11 +106,13 @@ public class DetalleService extends BaseService<Detalle, Long> {
         return detalleRepository.save(detalle);
     }
 
-    public void agregarImagenAlDetalle(Detalle detalle, Imagen imagen){
+    public void agregarImagenAlDetalle(Detalle detalle, List<Imagen> imagenes){
         if (detalle.getImagenes() == null || detalle.getImagenes().isEmpty()) {
             detalle.setImagenes(new ArrayList<>());
         }
-        detalle.getImagenes().add(imagen);
+        for (Imagen i : imagenes) {
+            detalle.getImagenes().add(i);
+        }
     }
 
     public Detalle aplicarDescuento(Long detalleId, Long descuentoId, LocalDateTime fechaFinal) throws Exception {

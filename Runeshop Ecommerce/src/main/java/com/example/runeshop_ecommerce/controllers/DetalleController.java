@@ -23,8 +23,8 @@ public class DetalleController extends BaseController<Detalle, Long> {
 
     @PutMapping("/actualizarImagenDetalle")
     public ResponseEntity<Detalle> actualizarDetalle(
-            @RequestParam("detalleId") Long detalleId,
-            @RequestParam("imagenId") Long imagenId,
+            @RequestPart("detalleId") Long detalleId,
+            @RequestPart("imagenId") Long imagenId,
             @RequestPart("imagen") MultipartFile file
     ) throws Exception {
         try {

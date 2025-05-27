@@ -34,13 +34,13 @@ public class ProductoController extends BaseController<Producto, Long> {
 
     @PostMapping( "/crear_producto")
     public ResponseEntity<Detalle> crearProducto (
-            @RequestPart(value = "imagen", required = false) MultipartFile file,
+            @RequestPart(value = "imagen") List<MultipartFile> files,
             @RequestPart("producto") CrearProductoDTO productoDTO,
             @RequestPart("detalle") CrearDetalleDTO detalleDTO
             ) throws Exception {
         try {
             Producto producto = productoService.crearProducto(productoDTO);
-            Detalle detalle = detalleService.crearDetalle(file, detalleDTO, producto);
+            Detalle detalle = detalleService.crearDetalle(files, detalleDTO, producto);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(detalle);
         } catch (Exception e) {
