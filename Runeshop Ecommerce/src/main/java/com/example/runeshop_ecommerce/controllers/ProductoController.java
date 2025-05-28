@@ -48,9 +48,9 @@ public class ProductoController extends BaseController<Producto, Long> {
         }
     }
 
-    @GetMapping("/{sexo}/filtro")
+    @GetMapping("/filtro")
     public ResponseEntity<List<Producto>> filtroProducto(
-            @PathVariable String sexo,
+            @RequestParam(required = false) String sexo,
             @RequestParam(required = false) Marca marca,
             @RequestParam(required = false) Integer talleNumero,
             @RequestParam(required = false) TipoProducto tipoProducto,
