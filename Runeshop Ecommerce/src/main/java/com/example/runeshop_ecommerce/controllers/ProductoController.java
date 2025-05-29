@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @RestController
@@ -54,65 +55,39 @@ public class ProductoController extends BaseController<Producto, Long> {
             @RequestParam(required = false) Marca marca,
             @RequestParam(required = false) Integer talleNumero,
             @RequestParam(required = false) TipoProducto tipoProducto,
-            @RequestParam(required = false)  String modelo,
-            @RequestParam(required = false) String categoria
+            @RequestParam(required = false) String modelo,
+            @RequestParam(required = false) String categoria,
+            @RequestParam(required = false) Double min,
+            @RequestParam(required = false) Double max,
+            @RequestParam(required = false) Boolean asc,
+            @RequestParam(required = false) Boolean desc
     ) throws Exception {
         try {
-            List<Producto> productos = productoService.filtroProd(sexo, marca, talleNumero, tipoProducto, modelo, categoria);
+            List<Producto> productos = productoService.filtroProd(sexo, marca, talleNumero, tipoProducto, modelo.toUpperCase(Locale.ROOT), categoria, min, max);
             if (productos.isEmpty()) {
                 return ResponseEntity.noContent().build();
             } else {
+                if (asc == null) {
+                    asc = false;
+                }
+
+                if (desc == null) {
+                    desc = false;
+                }
+
+                if (asc) {
+                    List<Producto> productosOrdAsc = productoService.orderAsc(productos);
+                    return ResponseEntity.ok(productosOrdAsc);
+                } else if (desc) {
+                    List<Producto> productosOrdDesc = productoService.orderDesc(productos);
+                    return ResponseEntity.ok(productosOrdDesc);
+                }
+
                 return ResponseEntity.ok(productos);
             }
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
 
-    }
-
-    @GetMapping("/filtro_precio")
-    public ResponseEntity<List<Producto>> filtrarPorPrecio(
-            @RequestParam(value = "min", required = true) Double min,
-            @RequestParam(name = "max", required = true) Double max
-    ) throws Exception {
-        try {
-
-            List<Producto> productos = productoService.filtrarPorPrecio(min, max);
-            if (productos.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            } else {
-                return ResponseEntity.ok(productos);
-            }
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
-
-    @GetMapping("/ord_asc")
-    public ResponseEntity<List<Producto>> ordenarPrecioAscendente() throws Exception {
-        try {
-            List<Producto> productos = productoService.ordenarPrecioAscendente();
-            if (productos.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            } else {
-                return ResponseEntity.ok(productos);
-            }
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
-
-    @GetMapping("/ord_desc")
-    public ResponseEntity<List<Producto>> ordenarPrecioDescendente() throws Exception {
-        try {
-            List<Producto> productos = productoService.ordenarPrecioDescendente();
-            if (productos.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            } else {
-                return ResponseEntity.ok(productos);
-            }
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
     }
 }

@@ -55,7 +55,8 @@ public class RuneshopEcommerceApplication {
 
                 // Direccion
                 Direccion direccion = Direccion.builder()
-                        .localidad("Ciudad Autónoma de Buenos Aires")
+                        .direccion("Pedro Molina 458")
+                        .codigoPostal(5501)
                         .departamento("Palermo")
                         .provincia("Buenos Aires")
                         .pais("Argentina")

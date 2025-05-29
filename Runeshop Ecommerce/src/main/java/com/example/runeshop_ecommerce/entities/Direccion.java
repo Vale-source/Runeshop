@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,10 +23,10 @@ import java.util.List;
 @JsonPropertyOrder({ "id", "localidad", "departamento", "provincia", "pais" })
 public class Direccion extends Base{
 
-    @JsonProperty("localidad")
-    @NotNull(message = "La localidad no puede ser nulo")
-    @Column(name = "localidad", nullable = false)
-    private String localidad;
+    @JsonProperty("direccion")
+    @NotNull(message = "La direccion no puede ser nulo")
+    @Column(name = "direccion", nullable = false)
+    private String direccion;
 
     @JsonProperty("departamento")
     @NotNull(message = "El departamento no puede ser nulo")
@@ -36,6 +37,11 @@ public class Direccion extends Base{
     @NotNull(message = "La provincia no puede ser nulo")
     @Column(name = "provincia",nullable = false)
     private String provincia;
+
+    @JsonProperty("codigoPostal")
+    @NotNull(message = "El codigo postal no puede ser nulo")
+    @Column(name = "CP")
+    private Integer codigoPostal;
 
     @JsonProperty("pais")
     @NotNull(message = "El pais no puede ser nulo")

@@ -2,6 +2,7 @@ package com.example.runeshop_ecommerce.controllers;
 
 import com.example.runeshop_ecommerce.entities.Base;
 import com.example.runeshop_ecommerce.services.BaseService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

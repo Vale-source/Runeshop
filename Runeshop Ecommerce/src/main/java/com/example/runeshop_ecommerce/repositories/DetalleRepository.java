@@ -13,22 +13,4 @@ import java.util.List;
 @Repository
 public interface DetalleRepository extends BaseRepository<Detalle, Long> {
 
-    @Query("SELECT DISTINCT d.producto " +
-            "FROM Detalle d " +
-            "WHERE d.precio.precioVenta " +
-            "BETWEEN :min AND :max")
-    List<Producto> filtroPrecio(
-            @Param("min") Double min,
-            @Param("max") Double max
-            );
-
-    @Query("SELECT d.producto " +
-            "FROM Detalle d " +
-            "ORDER BY d.precio.precioVenta ASC")
-    List<Producto> ordenarPrecioAsc ();
-
-    @Query("SELECT d.producto " +
-            "FROM Detalle d " +
-            "ORDER BY d.precio.precioVenta DESC")
-    List<Producto> ordenarPrecioDesc();
 }

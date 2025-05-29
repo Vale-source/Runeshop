@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class ProductoService extends BaseService<Producto, Long> {
@@ -40,7 +41,7 @@ public class ProductoService extends BaseService<Producto, Long> {
                 .orElseThrow(() -> new Exception("Categoria no encontrada"));
 
         Producto producto = Producto.builder()
-                .modelo(dto.getModelo())
+                .modelo(dto.getModelo().toUpperCase(Locale.ROOT))
                 .sexo(dto.getSexo())
                 .tipoProducto(dto.getTipoProducto())
                 .categoria(categoria)
@@ -58,30 +59,32 @@ public class ProductoService extends BaseService<Producto, Long> {
             Integer talleNumero,
             TipoProducto tipoProducto,
             String nombre,
-            String cateoria
-            ) throws Exception {
-        return productoRepository.filtro(sexo, marca, talleNumero, tipoProducto, nombre, cateoria);
-    }
-
-    @Transactional
-    public List<Producto> filtrarPorPrecio(Double min, Double max) throws Exception {
-        if (min.isNaN() || max.isNaN()) {
-            throw new Exception("Ingrese valores validos para el filtro");
+            String cateoria,
+            Double min,
+            Double max
+    ) throws Exception {
+        if (min != null && max != null && min > max) {
+            throw new Exception("El valor de 'min' no puede ser mayor que 'max'.");
         }
 
-        if (min > max) {
-            throw new IllegalArgumentException("El valor de 'min' no puede ser mayor que 'max'.");
+        return productoRepository.filtro(sexo, marca, talleNumero, tipoProducto, nombre, cateoria, min, max);
+    }
+
+    public List<Producto> orderAsc (
+            List<Producto> productos
+    ) throws Exception {
+        if (productos.isEmpty()) {
+            throw new Exception("La lista esta vacia");
         }
-        return detalleRepository.filtroPrecio(min, max);
+        return productoRepository.ordenarPrecioAsc(productos);
     }
 
-    @Transactional
-    public List<Producto> ordenarPrecioAscendente() {
-        return detalleRepository.ordenarPrecioAsc();
-    }
-
-    @Transactional
-    public List<Producto> ordenarPrecioDescendente() {
-            return detalleRepository.ordenarPrecioDesc();
+    public List<Producto> orderDesc (
+            List<Producto> productos
+    ) throws Exception {
+        if (productos.isEmpty()) {
+            throw new Exception("La lista esta vacia");
+        }
+        return productoRepository.ordenarPrecioDesc(productos);
     }
 }
