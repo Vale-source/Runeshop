@@ -8,6 +8,8 @@ import com.example.runeshop_ecommerce.entities.enums.TipoProducto;
 import com.example.runeshop_ecommerce.repositories.CategoriaRepository;
 import com.example.runeshop_ecommerce.repositories.DetalleRepository;
 import com.example.runeshop_ecommerce.repositories.ProductoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,15 +21,19 @@ import java.util.Locale;
 @Service
 public class ProductoService extends BaseService<Producto, Long> {
 
-    private final DetalleRepository detalleRepository;
+
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
 
-    public ProductoService(ProductoRepository productoRepository, DetalleRepository detalleRepository, ProductoRepository productoRepository1, CategoriaRepository categoriaRepository){
+    public ProductoService(ProductoRepository productoRepository, CategoriaRepository categoriaRepository){
         super(productoRepository);
-        this.detalleRepository = detalleRepository;
-        this.productoRepository = productoRepository1;
+        this.productoRepository = productoRepository;
         this.categoriaRepository = categoriaRepository;
+    }
+
+    @Transactional
+    public Page<Producto> getProductoPaginado(Pageable pageable) {
+        return productoRepository.getProductoPaginado(pageable);
     }
 
     @Transactional
@@ -53,38 +59,27 @@ public class ProductoService extends BaseService<Producto, Long> {
     }
 
     @Transactional
-    public List<Producto> filtroProd (
+    public Page<Producto> filtroProd (
             String sexo,
             Marca marca,
             Integer talleNumero,
             TipoProducto tipoProducto,
             String nombre,
-            String cateoria,
+            String categoria,
             Double min,
-            Double max
+            Double max,
+            Pageable pageable,
+            String orden
     ) throws Exception {
         if (min != null && max != null && min > max) {
             throw new Exception("El valor de 'min' no puede ser mayor que 'max'.");
         }
 
-        return productoRepository.filtro(sexo, marca, talleNumero, tipoProducto, nombre, cateoria, min, max);
+        if (orden.equalsIgnoreCase("desc")) {
+            return productoRepository.filtrarConPaginadoDesc(sexo, marca, talleNumero, tipoProducto, nombre, categoria, min, max, pageable);
+        } else {
+            return productoRepository.filtrarConPaginadoAsc(sexo, marca, talleNumero, tipoProducto, nombre, categoria, min, max, pageable);
+        }
     }
 
-    public List<Producto> orderAsc (
-            List<Producto> productos
-    ) throws Exception {
-        if (productos.isEmpty()) {
-            throw new Exception("La lista esta vacia");
-        }
-        return productoRepository.ordenarPrecioAsc(productos);
-    }
-
-    public List<Producto> orderDesc (
-            List<Producto> productos
-    ) throws Exception {
-        if (productos.isEmpty()) {
-            throw new Exception("La lista esta vacia");
-        }
-        return productoRepository.ordenarPrecioDesc(productos);
-    }
 }

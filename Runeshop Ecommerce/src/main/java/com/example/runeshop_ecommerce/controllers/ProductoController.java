@@ -3,12 +3,17 @@ package com.example.runeshop_ecommerce.controllers;
 
 import com.example.runeshop_ecommerce.DTOs.CrearDetalleDTO;
 import com.example.runeshop_ecommerce.DTOs.CrearProductoDTO;
+import com.example.runeshop_ecommerce.DTOs.GetProductoFilterDTO;
 import com.example.runeshop_ecommerce.entities.Detalle;
 import com.example.runeshop_ecommerce.entities.Producto;
 import com.example.runeshop_ecommerce.entities.enums.Marca;
 import com.example.runeshop_ecommerce.entities.enums.TipoProducto;
 import com.example.runeshop_ecommerce.services.DetalleService;
 import com.example.runeshop_ecommerce.services.ProductoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +38,26 @@ public class ProductoController extends BaseController<Producto, Long> {
         this.detalleService = detalleService;
     }
 
+    @GetMapping("/paginado")
+    public ResponseEntity<Page<Producto>> getProductoPaginado(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) throws Exception {
+        try {
+            Pageable pageRequest = PageRequest.of(page, size);
+
+            Page<Producto> productoPage = productoService.getProductoPaginado(pageRequest);
+
+            if (productoPage.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.ok(productoPage);
+            }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
     @PostMapping( "/crear_producto")
     public ResponseEntity<Detalle> crearProducto (
             @RequestPart(value = "imagen") List<MultipartFile> files,
@@ -50,41 +75,34 @@ public class ProductoController extends BaseController<Producto, Long> {
     }
 
     @GetMapping("/filtro")
-    public ResponseEntity<List<Producto>> filtroProducto(
-            @RequestParam(required = false) String sexo,
-            @RequestParam(required = false) Marca marca,
-            @RequestParam(required = false) Integer talleNumero,
-            @RequestParam(required = false) TipoProducto tipoProducto,
-            @RequestParam(required = false) String modelo,
-            @RequestParam(required = false) String categoria,
-            @RequestParam(required = false) Double min,
-            @RequestParam(required = false) Double max,
-            @RequestParam(required = false) Boolean asc,
-            @RequestParam(required = false) Boolean desc
+    public ResponseEntity<Page<Producto>> filtroProducto(
+            @ModelAttribute GetProductoFilterDTO prod,
+            @RequestParam(defaultValue = "asc") String orden,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) throws Exception {
         try {
-            List<Producto> productos = productoService.filtroProd(sexo, marca, talleNumero, tipoProducto, modelo.toUpperCase(Locale.ROOT), categoria, min, max);
+            Pageable pageable = PageRequest.of(page, size);
+
+            String modeloNormalized = (prod.getModelo() != null)
+                    ? prod.getModelo().toUpperCase(Locale.ROOT)
+                    : null;
+
+            Page<Producto> productos = productoService.filtroProd(
+                    prod.getSexo(),
+                    prod.getMarca(),
+                    prod.getTalleNumero(),
+                    prod.getTipoProducto(),
+                    modeloNormalized,
+                    prod.getCategoria(),
+                    prod.getMin(),
+                    prod.getMax(),
+                    pageable,
+                    orden);
             if (productos.isEmpty()) {
                 return ResponseEntity.noContent().build();
-            } else {
-                if (asc == null) {
-                    asc = false;
-                }
-
-                if (desc == null) {
-                    desc = false;
-                }
-
-                if (asc) {
-                    List<Producto> productosOrdAsc = productoService.orderAsc(productos);
-                    return ResponseEntity.ok(productosOrdAsc);
-                } else if (desc) {
-                    List<Producto> productosOrdDesc = productoService.orderDesc(productos);
-                    return ResponseEntity.ok(productosOrdDesc);
-                }
-
-                return ResponseEntity.ok(productos);
             }
+            return ResponseEntity.ok(productos);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

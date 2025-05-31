@@ -7,6 +7,8 @@ import com.example.runeshop_ecommerce.repositories.DetalleRepository;
 import com.example.runeshop_ecommerce.repositories.PrecioRepository;
 import com.example.runeshop_ecommerce.repositories.TalleRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +35,11 @@ public class DetalleService extends BaseService<Detalle, Long> {
         this.precioRepository = precioRepository;
         this.talleRepository = talleRepository;
         this.descuentoRepository = descuentoRepository;
+    }
+
+    @Transactional
+    public Page<Detalle> getDetallesPaginados(Pageable pageable) {
+        return detalleRepository.getDetallesPaginados(pageable);
     }
 
     @Transactional
