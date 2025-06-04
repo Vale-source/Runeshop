@@ -1,12 +1,12 @@
 package com.example.runeshop_ecommerce.services;
 
 import com.example.runeshop_ecommerce.entities.Base;
+import com.example.runeshop_ecommerce.exception.NotFoundException;
 import com.example.runeshop_ecommerce.repositories.BaseRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class BaseService<E extends Base, ID extends Serializable> {
 
@@ -26,12 +26,8 @@ public abstract class BaseService<E extends Base, ID extends Serializable> {
     }
 
     @Transactional
-    public Optional<E> findByID(ID id) throws Exception {
-        try {
-            return Optional.of(baseRepository.findById(id)).orElseThrow(() -> new Exception("Id no encontrado"));
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+    public E findByID(ID id) {
+        return baseRepository.findById(id).orElseThrow((() -> new NotFoundException("Id no encontrado")));
     }
 
     @Transactional
@@ -44,9 +40,9 @@ public abstract class BaseService<E extends Base, ID extends Serializable> {
     }
 
     @Transactional
-    public E update(E entity) throws Exception {
+    public E update(E data) throws Exception {
         try {
-            return baseRepository.save(entity);
+            return baseRepository.save(data);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

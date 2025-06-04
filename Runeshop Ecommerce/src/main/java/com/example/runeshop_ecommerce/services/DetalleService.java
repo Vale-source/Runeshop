@@ -2,6 +2,7 @@ package com.example.runeshop_ecommerce.services;
 
 import com.example.runeshop_ecommerce.DTOs.CrearDetalleDTO;
 import com.example.runeshop_ecommerce.entities.*;
+import com.example.runeshop_ecommerce.exception.NotFoundException;
 import com.example.runeshop_ecommerce.repositories.DescuentoRepository;
 import com.example.runeshop_ecommerce.repositories.DetalleRepository;
 import com.example.runeshop_ecommerce.repositories.PrecioRepository;
@@ -12,11 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -49,10 +47,10 @@ public class DetalleService extends BaseService<Detalle, Long> {
             Producto producto
     ) throws Exception {
         Precio precio = precioRepository.findById(dto.getPrecio().getId())
-                .orElseThrow(() -> new Exception("No se contro el id de ese precio"));
+                .orElseThrow(() -> new NotFoundException("No se contro el id de ese precio"));
 
         Talle talle = talleRepository.findById(dto.getTalle().getId())
-                .orElseThrow(() -> new Exception("No se contro el id de ese talle"));
+                .orElseThrow(() -> new NotFoundException("No se contro el id de ese talle"));
 
         Detalle detalle = Detalle.builder()
                 .color(dto.getColor())
@@ -82,7 +80,7 @@ public class DetalleService extends BaseService<Detalle, Long> {
     @Transactional
     public Detalle saveImagenInDetalle(Long detalleId, List<MultipartFile> files) throws Exception {
         Detalle detalle = detalleRepository.findById(detalleId)
-                .orElseThrow(() -> new Exception("No se encontro el detalle"));
+                .orElseThrow(() -> new NotFoundException("No se encontro el detalle"));
 
         if (files != null && !files.isEmpty()) {
             List<Imagen> imagenes = imagenService.subirImagen(files);
@@ -95,13 +93,13 @@ public class DetalleService extends BaseService<Detalle, Long> {
 
     public Detalle updateDetalle(Long detalleId, Long imagenId, MultipartFile file) throws Exception {
         Detalle detalle = detalleRepository.findById(detalleId)
-                .orElseThrow(() -> new Exception("Detalle no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Detalle no encontrado"));
 
         Imagen imagenAReemplazar = detalle.getImagenes()
                 .stream()
                 .filter(imagen -> imagen.getId().equals(imagenId))
                 .findFirst()
-                .orElseThrow(() -> new Exception("Imagen no encontrada"));
+                .orElseThrow(() -> new NotFoundException("Imagen no encontrada"));
 
         Imagen subirImagen = imagenService.actualizarImagen(file);
 
@@ -113,7 +111,7 @@ public class DetalleService extends BaseService<Detalle, Long> {
         return detalleRepository.save(detalle);
     }
 
-    public void agregarImagenAlDetalle(Detalle detalle, List<Imagen> imagenes){
+    public void agregarImagenAlDetalle(Detalle detalle, List<Imagen> imagenes) {
         if (detalle.getImagenes() == null || detalle.getImagenes().isEmpty()) {
             detalle.setImagenes(new ArrayList<>());
         }
@@ -122,12 +120,12 @@ public class DetalleService extends BaseService<Detalle, Long> {
         }
     }
 
-    public Detalle aplicarDescuento(Long detalleId, Long descuentoId, LocalDateTime fechaFinal) throws Exception {
+    public Detalle aplicarDescuento(Long detalleId, Long descuentoId, LocalDateTime fechaFinal) {
         Detalle detalle = detalleRepository.findById(detalleId)
-                .orElseThrow(() -> new Exception("Detalle no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Detalle no encontrado"));
 
         Descuento descuento = descuentoRepository.findById(descuentoId)
-                .orElseThrow(() -> new Exception("Descuento no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Descuento no encontrado"));
 
         LocalDateTime fechaInicio = LocalDateTime.now();
 

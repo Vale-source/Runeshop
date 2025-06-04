@@ -5,6 +5,7 @@ import com.example.runeshop_ecommerce.DTOs.CrearProductoDTO;
 import com.example.runeshop_ecommerce.entities.*;
 import com.example.runeshop_ecommerce.entities.enums.Marca;
 import com.example.runeshop_ecommerce.entities.enums.TipoProducto;
+import com.example.runeshop_ecommerce.exception.NotFoundException;
 import com.example.runeshop_ecommerce.repositories.CategoriaRepository;
 import com.example.runeshop_ecommerce.repositories.DetalleRepository;
 import com.example.runeshop_ecommerce.repositories.ProductoRepository;
@@ -39,12 +40,12 @@ public class ProductoService extends BaseService<Producto, Long> {
     @Transactional
     public Producto crearProducto (
             CrearProductoDTO dto
-    ) throws Exception {
+    ) {
         if (dto != null) {
             System.out.println("Modelo: " + dto.getModelo());
         }
         Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
-                .orElseThrow(() -> new Exception("Categoria no encontrada"));
+                .orElseThrow(() -> new NotFoundException("Categoria no encontrada"));
 
         Producto producto = Producto.builder()
                 .modelo(dto.getModelo().toUpperCase(Locale.ROOT))

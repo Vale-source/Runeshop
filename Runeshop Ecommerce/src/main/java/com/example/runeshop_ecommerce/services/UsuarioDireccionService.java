@@ -3,6 +3,7 @@ package com.example.runeshop_ecommerce.services;
 import com.example.runeshop_ecommerce.entities.Direccion;
 import com.example.runeshop_ecommerce.entities.Usuario;
 import com.example.runeshop_ecommerce.entities.UsuarioDireccion;
+import com.example.runeshop_ecommerce.exception.NotFoundException;
 import com.example.runeshop_ecommerce.repositories.DireccionRepository;
 import com.example.runeshop_ecommerce.repositories.UsuarioDireccionRepository;
 import com.example.runeshop_ecommerce.repositories.UsuarioRepository;
@@ -31,9 +32,9 @@ public class UsuarioDireccionService extends BaseService<UsuarioDireccion, Long>
     }
 
     @Transactional
-    public void agregarDireccion(Long id, Direccion direccion) throws Exception {
+    public void agregarDireccion(Long id, Direccion direccion) {
             Usuario usuario = usuarioRepository.findById(id)
-                    .orElseThrow(() -> new Exception("No se encontro el usuario"));
+                    .orElseThrow(() -> new NotFoundException("No se encontro el usuario"));
             direccionRepository.save(direccion);
             UsuarioDireccion relacion = UsuarioDireccion.builder()
                     .usuario(usuario)

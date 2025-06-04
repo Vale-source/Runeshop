@@ -3,6 +3,7 @@ package com.example.runeshop_ecommerce.services;
 import com.example.runeshop_ecommerce.entities.Detalle;
 import com.example.runeshop_ecommerce.entities.OrdenCompra;
 import com.example.runeshop_ecommerce.entities.UsuarioDireccion;
+import com.example.runeshop_ecommerce.exception.NotFoundException;
 import com.example.runeshop_ecommerce.repositories.DetalleRepository;
 import com.example.runeshop_ecommerce.repositories.OrdenCompraRepository;
 import com.example.runeshop_ecommerce.repositories.UsuarioDireccionRepository;
@@ -29,16 +30,16 @@ public class OrdenCompraService extends BaseService<OrdenCompra, Long> {
     }
 
     @Transactional
-    public OrdenCompra generarOrdenCompra(List<Long> detallesId, Long usuarioDireccionId) throws Exception {
+    public OrdenCompra generarOrdenCompra(List<Long> detallesId, Long usuarioDireccionId) {
         List<Detalle> detalles = new ArrayList<>();
         Double precioTotal = 0.0;
 
         UsuarioDireccion usuarioDireccion = usuarioDireccionRepository.findById(usuarioDireccionId)
-                .orElseThrow(() -> new Exception("No se encontro el usuario"));
+                .orElseThrow(() -> new NotFoundException("No se encontro el usuario"));
 
         for (Long l : detallesId) {
             Detalle d = detalleRepository.findById(l)
-                    .orElseThrow(() -> new Exception("No se encontro el detalle"));
+                    .orElseThrow(() -> new NotFoundException("No se encontro el detalle"));
             detalles.add(d);
         }
 

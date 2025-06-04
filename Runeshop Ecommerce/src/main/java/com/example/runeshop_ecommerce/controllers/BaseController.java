@@ -1,8 +1,8 @@
 package com.example.runeshop_ecommerce.controllers;
 
 import com.example.runeshop_ecommerce.entities.Base;
+import com.example.runeshop_ecommerce.exception.NotFoundException;
 import com.example.runeshop_ecommerce.services.BaseService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +25,7 @@ public abstract class BaseController<E extends Base, ID extends Serializable> {
     }
 
     @GetMapping("/{id}")
-    public Optional<E> findByID(@PathVariable ID id) throws Exception {
+    public E findByID(@PathVariable ID id) {
         return service.findByID(id);
     }
 
@@ -36,8 +36,8 @@ public abstract class BaseController<E extends Base, ID extends Serializable> {
     }
 
     @PutMapping()
-    public ResponseEntity<E> update(@RequestBody E entity) throws Exception {
-        E updateEntity = service.update(entity);
+    public ResponseEntity<E> update(@RequestBody E data) throws Exception {
+        E updateEntity = service.update(data);
         return ResponseEntity.ok(updateEntity);
     }
 
