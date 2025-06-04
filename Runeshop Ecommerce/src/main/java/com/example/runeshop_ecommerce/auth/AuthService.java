@@ -61,6 +61,7 @@ public class AuthService {
         usuarioRepository.save(usuario);
         return AuthResponse.builder()
                 .token(jwtService.getToken(usuario))
+                .id(usuario.getId())
                 .build();
     }
 }
