@@ -5,6 +5,7 @@ import com.example.runeshop_ecommerce.entities.OrdenCompra;
 import com.example.runeshop_ecommerce.repositories.OrdenCompraRepository;
 import com.example.runeshop_ecommerce.services.OrdenCompraService;
 import com.mercadopago.MercadoPagoConfig;
+import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
@@ -13,6 +14,7 @@ import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.preference.Preference;
 import com.mercadopago.resources.preference.PreferenceBackUrls;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/mercado")
 public class MercadoPagoController {
 
     Dotenv dotenv = Dotenv.load();
@@ -35,7 +37,7 @@ public class MercadoPagoController {
         this.ordenCompraService = ordenCompraService;
     }
 
-    @GetMapping("/mercado")
+    @GetMapping("/pago")
     public String mercado(
             @RequestParam("detallesId") List<Long> detallesId,
             @RequestParam("usuarioDireccionId") Long usuarioDireccionId
@@ -55,18 +57,13 @@ public class MercadoPagoController {
                 System.out.println("==== PREFERENCIA DE ITEM ====");
                 System.out.println("ID: " + detalle.getId());
                 System.out.println("Título: " + detalle.getProducto().getModelo());
-                System.out.println("Descripción (Color): " + detalle.getColor());
                 System.out.println("Imagen URL: " + detalle.getImagenes().get(0).getImagenUrl());
-                System.out.println("Categoría: " + detalle.getProducto().getCategoria().getNombre());
-                System.out.println("Cantidad: 1");
-                System.out.println("Moneda: ARS");
                 System.out.println("Precio Final: " + precioFinal);
                 System.out.println("=================================");
 
                 PreferenceItemRequest item = PreferenceItemRequest.builder()
                         .id(detalle.getId().toString())
                         .title(detalle.getProducto().getModelo())
-                        .description(detalle.getColor())
                         .pictureUrl(detalle.getImagenes().get(0).getImagenUrl())
                         .categoryId(detalle.getProducto().getCategoria().getNombre())
                         .quantity(1)
@@ -77,13 +74,22 @@ public class MercadoPagoController {
                 items.add(item);
             }
 
+            PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
+                            .success("https://99e2-2803-9800-9842-7276-90db-2977-c9c5-cd22.ngrok-free.app/exito")
+                            .pending("https://99e2-2803-9800-9842-7276-90db-2977-c9c5-cd22.ngrok-free.app/pendiente")
+                            .failure("https://99e2-2803-9800-9842-7276-90db-2977-c9c5-cd22.ngrok-free.app/fallo")
+                            .build();
+
             PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                     .items(items)
+                    .backUrls(backUrls)
+                    .autoReturn("approved")
                     .externalReference(ordenCompra.getId().toString())
                     .build();
 
             PreferenceClient client = new PreferenceClient();
             Preference preference = client.create(preferenceRequest);
+
 
             return preference.getInitPoint();
 
@@ -92,4 +98,29 @@ public class MercadoPagoController {
         }
     }
 
+    @GetMapping("/exito")
+    public String pagoExitoso(
+            @RequestParam(required = false) String payment_id,
+            @RequestParam(required = false) String external_reference
+    ) {
+        Long ordenCompraId = Long.valueOf(external_reference);
+
+        OrdenCompra ordenCompra = ordenCompraService.findByID(ordenCompraId);
+
+        ordenCompra.getDetalles().stream().forEach(
+                detalle -> detalle.setStock(detalle.getStock() - 1)
+        );
+
+        return "Pago exitoso. ID del pago " + payment_id;
+    }
+
+    @GetMapping("/fallo")
+    public String pagoFallido() {
+        return "El pago fallo.";
+    }
+
+    @GetMapping("/pendiente")
+    public String pagoPendiente() {
+        return "El pago esta pendiente.";
+    }
 }
