@@ -13,17 +13,18 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 
 @Service
 public class JwtService {
 
     private static final String SECRET_KEY="UnVuZXNob3BFY29tbWVyY2VNZWpvckdydXBvSXNsYXNUaWtpVGlraQ==";
+    private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 15;
 
     public String getToken(UserDetails userDetails) {
         return getToken(new HashMap<>(), userDetails);
     }
+
 
     private String getToken(Map<String, Object> extraClaims, UserDetails user) {
         return Jwts
@@ -31,7 +32,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*24))
+                .setExpiration(new Date(System.currentTimeMillis()+ ACCESS_TOKEN_EXPIRATION))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

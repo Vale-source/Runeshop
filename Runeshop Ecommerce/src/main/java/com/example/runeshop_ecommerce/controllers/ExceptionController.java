@@ -2,7 +2,9 @@ package com.example.runeshop_ecommerce.controllers;
 
 import com.example.runeshop_ecommerce.DTOs.ErrorResponse;
 
+import com.example.runeshop_ecommerce.exception.ExpirationRefreshTokenException;
 import com.example.runeshop_ecommerce.exception.NotFoundException;
+import com.example.runeshop_ecommerce.exception.NotProvideRefreshTokenException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -37,5 +39,17 @@ public class ExceptionController {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorResponse MalformedJsonHandler(HttpMessageNotReadableException ex) {
 		return new ErrorResponse("MALFORMED_JSON", "El cuerpo de la petición está mal formado o vacío.");
+	}
+
+	@ExceptionHandler(ExpirationRefreshTokenException.class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	public ErrorResponse ExpirationRefreshTokenHandler(ExpirationRefreshTokenException ex) {
+		return new ErrorResponse(ex.getCodigoError(), ex.getMessage());
+	}
+
+	@ExceptionHandler(NotProvideRefreshTokenException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorResponse NotProvideRefreshTokenHandler(NotProvideRefreshTokenException ex) {
+		return new ErrorResponse(ex.getCodigoError(), ex.getMessage());
 	}
 }
