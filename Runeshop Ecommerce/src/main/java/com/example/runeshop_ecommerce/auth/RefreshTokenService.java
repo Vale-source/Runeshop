@@ -1,4 +1,4 @@
-package com.example.runeshop_ecommerce.config;
+package com.example.runeshop_ecommerce.auth;
 
 import com.example.runeshop_ecommerce.entities.RefreshToken;
 import com.example.runeshop_ecommerce.entities.Usuario;

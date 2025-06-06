@@ -1,7 +1,6 @@
 package com.example.runeshop_ecommerce.auth;
 
 import com.example.runeshop_ecommerce.config.JwtService;
-import com.example.runeshop_ecommerce.config.RefreshTokenService;
 import com.example.runeshop_ecommerce.entities.RefreshToken;
 import com.example.runeshop_ecommerce.entities.Usuario;
 import com.example.runeshop_ecommerce.entities.enums.Role;
@@ -9,15 +8,11 @@ import com.example.runeshop_ecommerce.exception.NotFoundException;
 import com.example.runeshop_ecommerce.exception.NotProvideRefreshTokenException;
 import com.example.runeshop_ecommerce.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
