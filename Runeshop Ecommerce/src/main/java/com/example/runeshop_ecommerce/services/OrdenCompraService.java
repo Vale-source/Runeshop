@@ -4,6 +4,7 @@ import com.example.runeshop_ecommerce.entities.Detalle;
 import com.example.runeshop_ecommerce.entities.OrdenCompra;
 import com.example.runeshop_ecommerce.entities.UsuarioDireccion;
 import com.example.runeshop_ecommerce.exception.NotFoundException;
+import com.example.runeshop_ecommerce.exception.NotStockException;
 import com.example.runeshop_ecommerce.repositories.DetalleRepository;
 import com.example.runeshop_ecommerce.repositories.OrdenCompraRepository;
 import com.example.runeshop_ecommerce.repositories.UsuarioDireccionRepository;
@@ -63,12 +64,38 @@ public class OrdenCompraService extends BaseService<OrdenCompra, Long> {
                 .detalles(detalles)
                 .build();
 
-        usuarioDireccion.getOrdenCompras().add(ordenCompra);
-
         for (Detalle d : detalles) {
             d.getOrdenCompras().add(ordenCompra);
         }
 
+        usuarioDireccion.getOrdenCompras().add(ordenCompra);
+
         return ordenCompraRepository.save(ordenCompra);
+    }
+
+    @Transactional
+    public void reducirStock (Long id) {
+        Detalle detalle = detalleRepository.findByIdAndUpdate(id);
+        if (detalle.getStock() <= 0) {
+            throw new NotStockException("No hay stock disponible");
+        }
+
+        detalle.setStock(detalle.getStock() - 1);
+        detalleRepository.save(detalle);
+    }
+
+    @Transactional
+    public void deleteOrdenCompraFallida(Long id) {
+        OrdenCompra ordenCompra = ordenCompraRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("No se encontro la orden de compra"));
+
+        UsuarioDireccion ud = ordenCompra.getUsuarioDireccion();
+
+        ordenCompra.getDetalles().forEach(detalle -> detalle.setStock(detalle.getStock() + 1));
+        ordenCompra.getDetalles().clear();
+
+        ud.getOrdenCompras().remove(ordenCompra);
+
+        usuarioDireccionRepository.save(ud);
     }
 }

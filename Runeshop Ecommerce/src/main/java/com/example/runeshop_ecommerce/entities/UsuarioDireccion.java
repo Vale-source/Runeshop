@@ -29,7 +29,7 @@ public class UsuarioDireccion extends Base {
     @JoinColumn(name = "direccion_id")
     private Direccion direccion;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("usuariosDirecciones")
     @JoinColumn(name = "oredenes_de_compra")
     private List<OrdenCompra> ordenCompras;

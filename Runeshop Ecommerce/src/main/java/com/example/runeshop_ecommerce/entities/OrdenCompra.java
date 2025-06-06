@@ -25,7 +25,7 @@ public class OrdenCompra extends Base{
     @JsonProperty("total")
     @NotNull(message = "el total no puede ser nulo")
     @Column(name = "total", nullable = false)
-    private Double total; //Sumatoria de todos los productos
+    private Double total;
 
     @JsonProperty("fechaCompra")
     @NotNull(message = "la fecha de compra no puede ser nulo")
@@ -37,7 +37,7 @@ public class OrdenCompra extends Base{
     @JoinColumn(name = "id_usuario_direccion")
     private UsuarioDireccion usuarioDireccion;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JsonIgnoreProperties("ordenCompras")
     @JoinTable(
             name = "ordenCompra_detalle",

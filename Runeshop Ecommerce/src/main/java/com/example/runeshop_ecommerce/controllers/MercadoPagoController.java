@@ -2,6 +2,7 @@ package com.example.runeshop_ecommerce.controllers;
 
 import com.example.runeshop_ecommerce.entities.Detalle;
 import com.example.runeshop_ecommerce.entities.OrdenCompra;
+import com.example.runeshop_ecommerce.exception.NotStockException;
 import com.example.runeshop_ecommerce.repositories.OrdenCompraRepository;
 import com.example.runeshop_ecommerce.services.OrdenCompraService;
 import com.mercadopago.MercadoPagoConfig;
@@ -49,6 +50,8 @@ public class MercadoPagoController {
             List<PreferenceItemRequest> items = new ArrayList<>();
 
             for (Detalle detalle : ordenCompra.getDetalles()) {
+
+                ordenCompraService.reducirStock(detalle.getId());
 
                 Double precioFinal = (detalle.getDescuentos() != null)
                         ? detalle.getPrecioDescuento()
@@ -100,22 +103,18 @@ public class MercadoPagoController {
 
     @GetMapping("/exito")
     public String pagoExitoso(
-            @RequestParam(required = false) String payment_id,
-            @RequestParam(required = false) String external_reference
+            @RequestParam(required = false) String payment_id
     ) {
-        Long ordenCompraId = Long.valueOf(external_reference);
-
-        OrdenCompra ordenCompra = ordenCompraService.findByID(ordenCompraId);
-
-        ordenCompra.getDetalles().stream().forEach(
-                detalle -> detalle.setStock(detalle.getStock() - 1)
-        );
-
         return "Pago exitoso. ID del pago " + payment_id;
     }
 
     @GetMapping("/fallo")
-    public String pagoFallido() {
+    public String pagoFallido(
+            @RequestParam(required = false) String external_reference
+    ) {
+        Long ordenCompraId = Long.valueOf(external_reference);
+        ordenCompraService.deleteOrdenCompraFallida(ordenCompraId);
+
         return "El pago fallo.";
     }
 
