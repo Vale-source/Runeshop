@@ -11,6 +11,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -21,19 +23,19 @@ public class GetProductoFilterDTO {
     private String sexo;
 
     @JsonProperty("marca")
-    private Marca marca;
+    private List<Marca> marca;
 
     @JsonProperty("talle")
-    private Integer talleNumero;
+    private List<Integer> talleNumero;
 
     @JsonProperty("tipoProducto")
-    private TipoProducto tipoProducto;
+    private List<TipoProducto> tipoProducto;
 
     @JsonProperty("modelo")
     private String modelo;
 
     @JsonProperty("categoria")
-    private String categoria;
+    private List<String> categoria;
 
     @JsonProperty("min")
     private Double min;

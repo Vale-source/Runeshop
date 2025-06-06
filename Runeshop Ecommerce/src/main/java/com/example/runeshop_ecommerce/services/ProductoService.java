@@ -62,11 +62,11 @@ public class ProductoService extends BaseService<Producto, Long> {
     @Transactional
     public Page<Producto> filtroProd (
             String sexo,
-            Marca marca,
-            Integer talleNumero,
-            TipoProducto tipoProducto,
+            List<Marca> marca,
+            List<Integer> talleNumero,
+            List<TipoProducto> tipoProducto,
             String nombre,
-            String categoria,
+            List<String> categoria,
             Double min,
             Double max,
             Pageable pageable,
