@@ -43,8 +43,7 @@ public abstract class BaseController<E extends Base, ID extends Serializable> {
 
     //Borrado Logico
     @PutMapping("/{id}")
-    public void delete(@PathVariable ID id) throws Exception {
+    public void logicDelete(@PathVariable ID id) throws Exception {
         service.logicDeletion(id);
     }
-
 }

@@ -52,9 +52,20 @@ public abstract class BaseService<E extends Base, ID extends Serializable> {
     public void logicDeletion(ID id) throws Exception{
         try {
             E entity = baseRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Entidad no encontrada"));
+                    .orElseThrow(() -> new NotFoundException("Entidad no encontrada"));
             entity.setEstado(false);
             baseRepository.save(entity);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void delete(ID id) throws Exception {
+        try {
+            E entity = baseRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException("Entidad no encontrada"));
+            baseRepository.delete(entity);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
