@@ -80,11 +80,21 @@ public class RuneshopEcommerceApplication {
                         .build();
                 talleRepository.save(talle);
 
+                Talle talle1 = Talle.builder()
+                        .numero(52)
+                        .build();
+                talleRepository.save(talle1);
+
                 // Categoria
                 Categoria categoria = Categoria.builder()
                         .nombre("Urbano")
                         .build();
                 categoriaRepository.save(categoria);
+
+                Categoria categoria1 = Categoria.builder()
+                        .nombre("Running")
+                        .build();
+                categoriaRepository.save(categoria1);
 
                 // Imagen
                 Imagen imagen = Imagen.builder()
@@ -103,6 +113,15 @@ public class RuneshopEcommerceApplication {
                 imagenes.add(imagen);
                 imagenes.add(imagen2);
 
+                Imagen imagen3 = Imagen.builder()
+                        .nombre("Remera No Fake img")
+                        .imagenUrl("http://res.cloudinary.com/dpyfse8qb/image/upload/v1749212779/f4bqtlawyn00rhxcogkz.jpg")
+                        .build();
+                imagenRepository.save(imagen3);
+
+                List<Imagen> imagenes1 = new ArrayList<>();
+                imagenes1.add(imagen3);
+
                 // Precio
                 Precio precio = Precio.builder()
                         .precioCompra(23000.56)
@@ -119,6 +138,14 @@ public class RuneshopEcommerceApplication {
                         .build();
                 productoRepository.save(producto);
 
+                Producto producto1 = Producto.builder()
+                        .modelo("Remera No Fake")
+                        .sexo("Hombre")
+                        .tipoProducto(TipoProducto.REMERA)
+                        .categoria(categoria1)
+                        .build();
+                productoRepository.save(producto1);
+
                 // Detalle
                 Detalle detalle = Detalle.builder()
                         .marca(Marca.ADIDAS)
@@ -133,6 +160,21 @@ public class RuneshopEcommerceApplication {
                 List<Detalle> detalles = new ArrayList<>();
                 detalles.add(detalle);
                 talle.setDetalles(detalles);
+
+                // Detalle
+                Detalle detalle1 = Detalle.builder()
+                        .marca(Marca.NIKE)
+                        .stock(69)
+                        .color("Azul")
+                        .producto(producto1)
+                        .precio(precio)
+                        .talle(talle1)
+                        .imagenes(imagenes1)
+                        .build();
+                detalleRepository.save(detalle1);
+                List<Detalle> detalles1 = new ArrayList<>();
+                detalles1.add(detalle1);
+                talle.setDetalles(detalles1);
 
                 // Descuento
                 Descuento noDescuento = Descuento.builder()
@@ -170,11 +212,6 @@ public class RuneshopEcommerceApplication {
                         .valor(0.50)
                         .build();
                 descuentoRepository.save(descuento50);
-
-                // Actualizar relaciones entre Precio y Descuento
-//                detalle.setDescuentos(noDescuento);
-//                detalleRepository.save(detalle);
-
             } catch (Exception e) {
                 throw new Exception(e.getMessage());
             }
