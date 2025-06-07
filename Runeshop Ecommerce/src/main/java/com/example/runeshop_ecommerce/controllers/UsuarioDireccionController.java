@@ -72,7 +72,7 @@ public class UsuarioDireccionController extends BaseController<UsuarioDireccion,
 
     @PostMapping("/usuarios/{usuarioId}/direcciones")
     @Operation(
-            summary = "Obtener las direcciones de un usuario",
+            summary = "Asignar una direccion a un usuario",
             description = "Controlador para crear las direcciones de un usuario y asignarselo pasando por URL el id usuario",
             tags = {"PostMapping"},
             requestBody = @RequestBody(
@@ -95,20 +95,22 @@ public class UsuarioDireccionController extends BaseController<UsuarioDireccion,
                             content = {
                                     @Content(
                                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                            array = @ArraySchema(schema = @Schema(
+                                            schema = @Schema(
                                                     implementation = Producto.class
-                                            ))
+                                            )
                                     )
                             }
                     )
             }
     )
     public ResponseEntity<?> agregarDireccion(
-            @Valid @RequestBody Direccion direccion,
+            @Valid @org.springframework.web.bind.annotation.RequestBody Direccion direccion,
             BindingResult resDireccion,
             @Parameter(description = "ID de usuario", required = true)
             @PathVariable Long usuarioId
     ) throws Exception {
+        System.out.println(resDireccion);
+        System.out.println(direccion);
         if (resDireccion.hasErrors()) {
             return ResponseEntity.badRequest().body("Campos incorrectos o faltantes");
         }

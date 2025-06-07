@@ -93,7 +93,7 @@ public abstract class BaseController<E extends Base, ID extends Serializable> {
                             responseCode = "201",
                             description = "Entidad creada correctamente",
                             content = @Content(
-                                    mediaType = "application/json",
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(
                                             implementation = GenericType.class
                                     )
@@ -101,7 +101,8 @@ public abstract class BaseController<E extends Base, ID extends Serializable> {
                     )
             }
     )
-    public ResponseEntity<E> create(@RequestBody E entity) throws Exception {
+    public ResponseEntity<E> create(@org.springframework.web.bind.annotation.RequestBody E entity) throws Exception {
+        System.out.println(entity);
         E newEntity = service.create(entity);
         return ResponseEntity.status(201).body(newEntity);
     }
@@ -134,7 +135,7 @@ public abstract class BaseController<E extends Base, ID extends Serializable> {
                     )
             }
     )
-    public ResponseEntity<E> update(@RequestBody E data) throws Exception {
+    public ResponseEntity<E> update(@org.springframework.web.bind.annotation.RequestBody E data) throws Exception {
         E updateEntity = service.update(data);
         return ResponseEntity.ok(updateEntity);
     }
