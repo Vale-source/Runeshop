@@ -5,10 +5,12 @@ import com.example.runeshop_ecommerce.entities.enums.Marca;
 import com.example.runeshop_ecommerce.entities.enums.Role;
 import com.example.runeshop_ecommerce.entities.enums.TipoProducto;
 import com.example.runeshop_ecommerce.repositories.*;
+import com.example.runeshop_ecommerce.utils.DotenvLoader;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -24,7 +26,8 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
 public class RuneshopEcommerceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(RuneshopEcommerceApplication.class, args);
+        SpringApplicationBuilder builder = new SpringApplicationBuilder(RuneshopEcommerceApplication.class);
+        builder.initializers(new DotenvLoader()).run(args);
         System.out.println("Servidor Iniciado");
     }
     @Bean
