@@ -15,6 +15,14 @@ import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.preference.Preference;
 import com.mercadopago.resources.preference.PreferenceBackUrls;
 import io.github.cdimascio.dotenv.Dotenv;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jdk.jfr.ContentType;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +35,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/mercado")
+@Tag(name = "MercadoPago", description = "Controlador que se ejecuta cuando se va a realizar un pago")
 public class MercadoPagoController {
 
     Dotenv dotenv = Dotenv.load();
@@ -39,8 +48,30 @@ public class MercadoPagoController {
     }
 
     @GetMapping("/pago")
+    @Operation(
+            summary = "Controlador de MercadoPago",
+            description = "Dicho metodo genera una orden de compra y luego redireccion a la pagina de pago de MercadoPago",
+            tags = {"GetMapping"},
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "No hay descripcion, deberia redirigirte a la pagina de pago",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(
+                                                    implementation = String.class
+                                            )
+                                    )
+                            }
+                    )
+            }
+    )
     public String mercado(
+            @Parameter(description = "ID del detalle (Productos que se van a comprar)", required = true)
             @RequestParam("detallesId") List<Long> detallesId,
+
+            @Parameter(description = "ID del usuario direccion (Donde y quien realiza la compra)", required = true)
             @RequestParam("usuarioDireccionId") Long usuarioDireccionId
     ) {
         try {
@@ -102,14 +133,54 @@ public class MercadoPagoController {
     }
 
     @GetMapping("/exito")
+    @Operation(
+            summary = "Ruta de MercadoPago cuando se realiza el pago sin exito",
+            description = "BackUrl de pago exitoso",
+            tags = {"GetMapping"},
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Redireccion hacia la pagina principal (landing) o pagina personalizada de confirmacion de pago",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(
+                                                    implementation = String.class //Redirect View
+                                            )
+                                    )
+                            }
+                    )
+            }
+    )
     public String pagoExitoso(
+            @Parameter(description = "ID del pago generado por Mercado pago", required = true)
             @RequestParam(required = false) String payment_id
     ) {
         return "Pago exitoso. ID del pago " + payment_id;
     }
 
     @GetMapping("/fallo")
+    @Operation(
+            summary = "Ruta de MercadoPago cuando el pago falla",
+            description = "BackUrl de pago fallido",
+            tags = {"GetMapping"},
+            responses = {
+                    @ApiResponse(
+                            responseCode = "409",
+                            description = "Redireccion hacia la pagina personalizada de pago fallido",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(
+                                                    implementation = String.class //Redirect View
+                                            )
+                                    )
+                            }
+                    )
+            }
+    )
     public String pagoFallido(
+            @Parameter(description = "Referencia externa generada por Mercado Pago (donde esta la orden de compra)")
             @RequestParam(required = false) String external_reference
     ) {
         Long ordenCompraId = Long.valueOf(external_reference);
@@ -119,6 +190,25 @@ public class MercadoPagoController {
     }
 
     @GetMapping("/pendiente")
+    @Operation(
+            summary = "Ruta de MercadoPago cuando el pago esta pendiente",
+            description = "BackUrl de pago pendiente",
+            tags = {"GetMapping"},
+            responses = {
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Redireccion hacia la pagina personalizada de pago pendiente",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(
+                                                    implementation = String.class //Redirect View
+                                            )
+                                    )
+                            }
+                    )
+            }
+    )
     public String pagoPendiente() {
         return "El pago esta pendiente.";
     }

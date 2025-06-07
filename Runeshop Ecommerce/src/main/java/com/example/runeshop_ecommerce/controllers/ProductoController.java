@@ -4,12 +4,23 @@ package com.example.runeshop_ecommerce.controllers;
 import com.example.runeshop_ecommerce.DTOs.CrearDetalleDTO;
 import com.example.runeshop_ecommerce.DTOs.CrearProductoDTO;
 import com.example.runeshop_ecommerce.DTOs.GetProductoFilterDTO;
+import com.example.runeshop_ecommerce.DTOs.UploadRequest;
 import com.example.runeshop_ecommerce.entities.Detalle;
 import com.example.runeshop_ecommerce.entities.Producto;
 import com.example.runeshop_ecommerce.entities.enums.Marca;
 import com.example.runeshop_ecommerce.entities.enums.TipoProducto;
 import com.example.runeshop_ecommerce.services.DetalleService;
 import com.example.runeshop_ecommerce.services.ProductoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.SchemaProperty;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +38,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/producto")
+@Tag(name = "Producto", description = "Controlador de productos")
 public class ProductoController extends BaseController<Producto, Long> {
 
     private final ProductoService productoService;
@@ -39,8 +51,30 @@ public class ProductoController extends BaseController<Producto, Long> {
     }
 
     @GetMapping("/paginado")
+    @Operation(
+            summary = "Obtencion de los productos paginados",
+            description = "Metodo Get HTTP para obtener los productos paginados",
+            tags = {"GetMapping"},
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Productos traidos correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            array = @ArraySchema(schema = @Schema(
+                                                    implementation = Producto.class
+                                            ))
+                                    )
+                            }
+                    )
+            }
+    )
     public ResponseEntity<Page<Producto>> getProductoPaginado(
+            @Parameter(description = "Pagina incial (valor por default = 0)")
             @RequestParam(defaultValue = "0") int page,
+
+            @Parameter(description = "Cantidad de paginas (valor por default = 10)")
             @RequestParam(defaultValue = "10") int size
     ) throws Exception {
         try {
@@ -59,6 +93,35 @@ public class ProductoController extends BaseController<Producto, Long> {
     }
 
     @PostMapping( "/crear_producto")
+    @Operation(
+            summary = "Creacion del producto",
+            description = "Controlador que recibe 3 parametros, el DTO de detalle, el DTO de producto y la/las imagen/es",
+            tags = {"PostMapping"},
+            requestBody = @RequestBody(
+                    description = "DTOs de producto y detalle, junto con la imagen",
+                    required = true,
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                                    schema = @Schema(implementation = UploadRequest.class)
+                            )
+                    }
+            ),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Producto creado correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                                            schema = @Schema(
+                                                    implementation = Detalle.class
+                                            )
+                                    )
+                            }
+                    )
+            }
+    )
     public ResponseEntity<Detalle> crearProducto (
             @RequestPart(value = "imagen") List<MultipartFile> files,
             @RequestPart("producto") CrearProductoDTO productoDTO,
@@ -75,10 +138,36 @@ public class ProductoController extends BaseController<Producto, Long> {
     }
 
     @GetMapping("/filtro")
+    @Operation(
+            summary = "Filtros opcionales de productos",
+            description = "Controlador para poder filtrar productos de los campos seleccionados, pueden elegirse varios campos del una categoria (Multiples marcas, tipoProductos, etc)",
+            tags = {"GetMapping"},
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Productos filtrados correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            array = @ArraySchema(schema = @Schema(
+                                                    implementation = Producto.class
+                                            ))
+                                    )
+                            }
+                    )
+            }
+    )
     public ResponseEntity<Page<Producto>> filtroProducto(
+            @ParameterObject
             @ModelAttribute GetProductoFilterDTO prod,
+
+            @Parameter(description = "Orden en que los datos deben ser traidos (asc o desc) por default = asc")
             @RequestParam(defaultValue = "asc") String orden,
+
+            @Parameter(description = "Pagina incial (valor por default = 0)")
             @RequestParam(defaultValue = "0") int page,
+
+            @Parameter(description = "Cantidad de paginas (valor por default = 10)")
             @RequestParam(defaultValue = "10") int size
     ) throws Exception {
         try {
