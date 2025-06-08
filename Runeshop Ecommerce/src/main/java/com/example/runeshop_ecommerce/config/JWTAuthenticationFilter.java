@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,8 +30,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
 
         try {
             final String token = getTokenFromRequest(request);
@@ -60,11 +60,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
 
         } catch (ExpirationAccessTokenException ex) {
-            handleJwtError(response, HttpStatus.UNAUTHORIZED.value(),
-                    "ACCESS_TOKEN_EXPIRATION", ex.getMessage());
+            throw ex;
         } catch (Exception ex) {
-            handleJwtError(response, HttpStatus.UNAUTHORIZED.value(),
-                    "INVALID_TOKEN", "Token de autenticación inválido");
+            throw new BadCredentialsException("Token invalido", ex);
         }
     }
 
@@ -74,14 +72,5 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             return authHeader.substring(7);
         }
         return null;
-    }
-
-    private void handleJwtError(HttpServletResponse response, int status, String errorCode, String message)
-            throws IOException {
-        response.setStatus(status);
-        response.setContentType("application/json");
-        response.getWriter().write(
-                String.format("{\"codigoError\": \"%s\", \"mensaje\": \"%s\"}", errorCode, message)
-        );
     }
 }

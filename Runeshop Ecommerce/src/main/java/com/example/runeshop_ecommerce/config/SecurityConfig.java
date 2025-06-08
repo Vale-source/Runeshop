@@ -44,6 +44,13 @@ public class SecurityConfig {
                                             "{\"codigoError\": \"UNAUTHORIZED\", \"mensaje\": \"Autenticacion requerida\"}"
                                     );
                                 })
+                                .accessDeniedHandler(((request, response, accessDeniedException) -> {
+                                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                                    response.setContentType("application/json");
+                                    response.getWriter().write(
+                                            "{\"codigoError\": \"FORBIDDEN\", \"mensaje\": \"No tienes permisos para este recurso\"}"
+                                    );
+                                }))
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
