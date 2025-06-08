@@ -2,10 +2,7 @@ package com.example.runeshop_ecommerce.controllers;
 
 import com.example.runeshop_ecommerce.DTOs.ErrorResponse;
 
-import com.example.runeshop_ecommerce.exception.ExpirationRefreshTokenException;
-import com.example.runeshop_ecommerce.exception.NotFoundException;
-import com.example.runeshop_ecommerce.exception.NotProvideRefreshTokenException;
-import com.example.runeshop_ecommerce.exception.NotStockException;
+import com.example.runeshop_ecommerce.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -57,6 +54,12 @@ public class ExceptionController {
 	@ExceptionHandler(NotStockException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ErrorResponse NotStockHandler(NotStockException ex) {
+		return new ErrorResponse(ex.getCodigoError(), ex.getMessage());
+	}
+
+	@ExceptionHandler(ExpirationAccessTokenException.class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	public ErrorResponse ExpirationAccessTokenHandler(ExpirationAccessTokenException ex) {
 		return new ErrorResponse(ex.getCodigoError(), ex.getMessage());
 	}
 }

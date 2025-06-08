@@ -1,6 +1,7 @@
 package com.example.runeshop_ecommerce.config;
 
 
+import com.example.runeshop_ecommerce.exception.ExpirationAccessTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -68,6 +69,9 @@ public class JwtService {
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String nombreUsuario = getUsernameFromToken(token);
+        if  (isTokenExpired(token)) {
+            throw new ExpirationAccessTokenException("El token de acceso ha expirado");
+        }
         return (nombreUsuario.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }
