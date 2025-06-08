@@ -1,5 +1,6 @@
 package com.example.runeshop_ecommerce.config;
 
+import com.example.runeshop_ecommerce.exception.ExpirationAccessTokenException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
@@ -49,26 +50,29 @@ public class  JWTAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        try {
+            nombreUsuario = jwtService.getUsernameFromToken(token);
 
-        nombreUsuario = jwtService.getUsernameFromToken(token);
+            if (nombreUsuario != null && SecurityContextHolder.getContext().getAuthentication()==null) {
 
-        if (nombreUsuario != null && SecurityContextHolder.getContext().getAuthentication()==null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(nombreUsuario);
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(nombreUsuario);
+                if (jwtService.isTokenValid(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
 
-            if (jwtService.isTokenValid(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
+            filterChain.doFilter(request, response);
+        } catch (ExpirationAccessTokenException ex) {
+            throw new ExpirationAccessTokenException(ex.getMessage());
         }
-        filterChain.doFilter(request, response);
     }
 
 
