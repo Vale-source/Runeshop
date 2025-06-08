@@ -68,10 +68,12 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String nombreUsuario = getUsernameFromToken(token);
-        if  (isTokenExpired(token)) {
+        final String username = getUsernameFromToken(token);
+
+        if (isTokenExpired(token)) {
             throw new ExpirationAccessTokenException("El token de acceso ha expirado");
         }
-        return (nombreUsuario.equals(userDetails.getUsername()) && !isTokenExpired(token));
+
+        return (username.equals(userDetails.getUsername()));
     }
 }
