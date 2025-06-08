@@ -4,6 +4,7 @@ import com.example.runeshop_ecommerce.config.JwtService;
 import com.example.runeshop_ecommerce.entities.RefreshToken;
 import com.example.runeshop_ecommerce.entities.Usuario;
 import com.example.runeshop_ecommerce.entities.enums.Role;
+import com.example.runeshop_ecommerce.exception.DataExistException;
 import com.example.runeshop_ecommerce.exception.NotFoundException;
 import com.example.runeshop_ecommerce.exception.NotProvideRefreshTokenException;
 import com.example.runeshop_ecommerce.repositories.UsuarioRepository;
@@ -45,13 +46,13 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
         if (usuarioRepository.findUsuarioByNombreUsuario(request.getNombreUsuario()).isPresent()) {
-            throw new IllegalArgumentException("Nombre de usuario ya registrado");
+            throw new DataExistException("Nombre de usuario ya registrado");
         }
         if (usuarioRepository.findUsuarioByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Email ya registrado");
+            throw new DataExistException("Email ya registrado");
         }
         if (usuarioRepository.findUsuarioByDni(request.getDni()).isPresent()) {
-            throw new IllegalArgumentException("DNI ya registrado");
+            throw new DataExistException("DNI ya registrado");
         }
 
         Usuario usuario = Usuario.builder()

@@ -62,4 +62,10 @@ public class ExceptionController {
 	public ErrorResponse ExpirationAccessTokenHandler(ExpirationAccessTokenException ex) {
 		return new ErrorResponse(ex.getCodigoError(), ex.getMessage());
 	}
+
+	@ExceptionHandler(DataExistException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorResponse DataExistHandler(DataExistException ex) {
+		return new ErrorResponse(ex.getCodigoError(), ex.getMessage());
+	}
 }
