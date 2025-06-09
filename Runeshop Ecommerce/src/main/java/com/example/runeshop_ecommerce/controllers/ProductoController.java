@@ -4,11 +4,9 @@ package com.example.runeshop_ecommerce.controllers;
 import com.example.runeshop_ecommerce.DTOs.CrearDetalleDTO;
 import com.example.runeshop_ecommerce.DTOs.CrearProductoDTO;
 import com.example.runeshop_ecommerce.DTOs.GetProductoFilterDTO;
-import com.example.runeshop_ecommerce.DTOs.UploadRequest;
+import com.example.runeshop_ecommerce.DTOs.ProductoDetalleUploadRequest;
 import com.example.runeshop_ecommerce.entities.Detalle;
 import com.example.runeshop_ecommerce.entities.Producto;
-import com.example.runeshop_ecommerce.entities.enums.Marca;
-import com.example.runeshop_ecommerce.entities.enums.TipoProducto;
 import com.example.runeshop_ecommerce.services.DetalleService;
 import com.example.runeshop_ecommerce.services.ProductoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +14,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,17 +21,14 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/producto")
@@ -103,7 +97,7 @@ public class ProductoController extends BaseController<Producto, Long> {
                     content = {
                             @Content(
                                     mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                                    schema = @Schema(implementation = UploadRequest.class)
+                                    schema = @Schema(implementation = ProductoDetalleUploadRequest.class)
                             )
                     }
             ),

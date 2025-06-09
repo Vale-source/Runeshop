@@ -1,12 +1,18 @@
 package com.example.runeshop_ecommerce.controllers;
 
+import com.example.runeshop_ecommerce.DTOs.CrearDetalleDTO;
+import com.example.runeshop_ecommerce.DTOs.DetalleUploadRequest;
 import com.example.runeshop_ecommerce.entities.Detalle;
+import com.example.runeshop_ecommerce.entities.Producto;
+import com.example.runeshop_ecommerce.exception.NotFoundException;
+import com.example.runeshop_ecommerce.repositories.ProductoRepository;
 import com.example.runeshop_ecommerce.services.DetalleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -20,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.html.parser.Entity;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/detalle")
@@ -27,10 +34,12 @@ import java.time.LocalDateTime;
 public class DetalleController extends BaseController<Detalle, Long> {
 
     private final DetalleService detalleService;
+    private final ProductoRepository productoRepository;
 
-    public DetalleController(DetalleService detalleService, DetalleService detalleService1) {
+    public DetalleController(DetalleService detalleService, DetalleService detalleService1, ProductoRepository productoRepository) {
         super(detalleService);
         this.detalleService = detalleService1;
+        this.productoRepository = productoRepository;
     }
 
     @GetMapping("/paginado")
@@ -137,6 +146,50 @@ public class DetalleController extends BaseController<Detalle, Long> {
         try {
             Detalle descuento = detalleService.aplicarDescuento(detalleId, descuentoId, fecha);
             return ResponseEntity.status(200).body(descuento);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @PostMapping("/agregar")
+    @Operation(
+            summary = "Agregar detalles a producto ya existente",
+            description = "Metodo personalizado el cual se le debe pasar un detalle, el id de producto y la o las imagen/imagenes",
+            tags = {"PostMapping"},
+            requestBody = @RequestBody(
+                    description = "DTO del detalle, ID del producto y las imagenes",
+                    required = true,
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                                    schema = @Schema(implementation = DetalleUploadRequest.class)
+                            )
+                    }
+            ),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Detalle agregado al producto correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                                            schema = @Schema(implementation = Detalle.class)
+                                    )
+                            }
+                    )
+            }
+    )
+    public ResponseEntity<Detalle> agregarDetalle(
+            @RequestParam("prodId") Long prodId,
+            @RequestPart("detalle") CrearDetalleDTO detalleDTO,
+            @RequestPart(value = "imagen") List<MultipartFile> files
+    ) throws Exception {
+        try {
+            Producto producto = productoRepository.findById(prodId)
+                    .orElseThrow(() -> new NotFoundException("Producto no encontrado"));
+
+            Detalle detalle = detalleService.crearDetalle(files, detalleDTO, producto);
+            return ResponseEntity.status(201).body(detalle);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UploadRequest {
+public class ProductoDetalleUploadRequest {
 	// Clase auxiliar para documentar con Swagger
 
 	@Schema(type = "string", format = "binary", description = "Archivo a subir")

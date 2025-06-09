@@ -1,7 +1,5 @@
 package com.example.runeshop_ecommerce.auth;
 
-import com.example.runeshop_ecommerce.DTOs.UploadRequest;
-import com.example.runeshop_ecommerce.entities.Detalle;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
