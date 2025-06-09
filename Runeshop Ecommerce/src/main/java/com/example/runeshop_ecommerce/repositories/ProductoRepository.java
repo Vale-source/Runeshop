@@ -29,7 +29,8 @@ public interface ProductoRepository extends BaseRepository<Producto, Long> {
     AND (:nombreParam IS NULL OR :nombreParam = p.modelo)
     AND (:categoriaParam IS NULL OR p.categoria.nombre IN :categoriaParam)
     AND ((:min IS NULL AND :max IS NULL)
-    OR (:min IS NOT NULL AND :max IS NOT NULL AND d.precio.precioVenta BETWEEN :min AND :max))
+    OR (:min IS NOT NULL AND :max IS NOT NULL AND d.precio.precioVenta BETWEEN :min AND :max)
+    OR (:min IS NOT NULL AND :max IS NOT NULL AND d.precioDescuento BETWEEN :min AND :max))
     ORDER BY d.precio.precioVenta ASC
     """)
     Page<Producto> filtrarConPaginadoAsc(
@@ -56,7 +57,8 @@ public interface ProductoRepository extends BaseRepository<Producto, Long> {
     AND (:nombreParam IS NULL OR :nombreParam = p.modelo)
     AND (:categoriaParam IS NULL OR p.categoria.nombre IN :categoriaParam)
     AND ((:min IS NULL AND :max IS NULL)
-    OR (:min IS NOT NULL AND :max IS NOT NULL AND d.precio.precioVenta BETWEEN :min AND :max))
+    OR (:min IS NOT NULL AND :max IS NOT NULL AND d.precio.precioVenta BETWEEN :min AND :max)
+    OR (:min IS NOT NULL AND :max IS NOT NULL AND d.precioDescuento BETWEEN :min AND :max))
     ORDER BY d.precio.precioVenta DESC
     """)
     Page<Producto> filtrarConPaginadoDesc(
