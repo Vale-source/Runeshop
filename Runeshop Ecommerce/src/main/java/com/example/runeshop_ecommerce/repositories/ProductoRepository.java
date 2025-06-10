@@ -28,17 +28,10 @@ public interface ProductoRepository extends BaseRepository<Producto, Long> {
     AND (:tipoProdParam IS NULL OR p.tipoProducto IN :tipoProdParam)
     AND (:nombreParam IS NULL OR :nombreParam = p.modelo)
     AND (:categoriaParam IS NULL OR p.categoria.nombre IN :categoriaParam)
-    AND (
-        (:min IS NULL OR :max IS NULL)
-    OR (
-        (d.precioDescuento IS NOT NULL AND d.precioDescuento BETWEEN :min AND :max)
-        OR (d.precioDescuento IS NULL AND d.precio.precioVenta BETWEEN :min AND :max)
-    ))
-    ORDER BY 
-        CASE 
-            WHEN d.precioDescuento IS NOT NULL THEN d.precioDescuento
-            ELSE d.precio.precioVenta
-    END ASC
+    AND ((:min IS NULL AND :max IS NULL)
+    OR (:min IS NOT NULL AND :max IS NOT NULL AND d.precio.precioVenta BETWEEN :min AND :max)
+    OR (:min IS NOT NULL AND :max IS NOT NULL AND d.precioDescuento IS NOT NULL AND d.precioDescuento BETWEEN :min AND :max))
+    ORDER BY d.precio.precioVenta DESC
     """)
     Page<Producto> filtrarConPaginadoAsc(
             @Param("sexoParam") String sexo,
@@ -63,17 +56,10 @@ public interface ProductoRepository extends BaseRepository<Producto, Long> {
     AND (:tipoProdParam IS NULL OR p.tipoProducto IN :tipoProdParam)
     AND (:nombreParam IS NULL OR :nombreParam = p.modelo)
     AND (:categoriaParam IS NULL OR p.categoria.nombre IN :categoriaParam)
-    AND (
-        (:min IS NULL OR :max IS NULL)
-    OR (
-        (d.precioDescuento IS NOT NULL AND d.precioDescuento BETWEEN :min AND :max)
-        OR (d.precioDescuento IS NULL AND d.precio.precioVenta BETWEEN :min AND :max)
-    ))
-    ORDER BY 
-        CASE 
-            WHEN d.precioDescuento IS NOT NULL THEN d.precioDescuento
-            ELSE d.precio.precioVenta
-    END DESC 
+    AND ((:min IS NULL AND :max IS NULL)
+    OR (:min IS NOT NULL AND :max IS NOT NULL AND d.precio.precioVenta BETWEEN :min AND :max)
+    OR (:min IS NOT NULL AND :max IS NOT NULL AND d.precioDescuento IS NOT NULL AND d.precioDescuento BETWEEN :min AND :max))
+    ORDER BY d.precio.precioVenta DESC
     """)
     Page<Producto> filtrarConPaginadoDesc(
             @Param("sexoParam") String sexo,

@@ -72,16 +72,12 @@ public class ProductoService extends BaseService<Producto, Long> {
             Pageable pageable,
             String orden
     ) throws Exception {
-        
-        if (min != null && max != null) {
-            throw new Exception("'max' y 'min' no pueden ser null");
-        }
 
-        if (min > max) {
+        if ((min != null && max != null) && min > max) {
             throw new Exception("El valor de 'min' no puede ser mayor que 'max'");
         }
 
-        if (min <= 0.0) {
+        if ((min != null && min <= 0.0) || (max != null && max <= 0.0)) {
             throw new Exception("El valor de 'min' y 'max' no puede ser 0");
         }
 
