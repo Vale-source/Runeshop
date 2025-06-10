@@ -2,6 +2,7 @@ package com.example.runeshop_ecommerce.controllers;
 
 import com.example.runeshop_ecommerce.entities.Imagen;
 import com.example.runeshop_ecommerce.services.BaseService;
+import com.example.runeshop_ecommerce.services.CloudinaryService;
 import com.example.runeshop_ecommerce.services.ImagenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,12 +12,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/imagen")
@@ -24,10 +24,12 @@ import java.awt.*;
 public class ImagenController extends BaseController<Imagen, Long> {
     
     private final ImagenService imagenService;
-    
-    public ImagenController(ImagenService imagenService, ImagenService imagenService1) {
+    private final CloudinaryService cloudinaryService;
+
+    public ImagenController(ImagenService imagenService, ImagenService imagenService1, CloudinaryService cloudinaryService) {
         super(imagenService);
         this.imagenService = imagenService1;
+        this.cloudinaryService = cloudinaryService;
     }
 
     @DeleteMapping("/{id}")
@@ -57,6 +59,36 @@ public class ImagenController extends BaseController<Imagen, Long> {
             return ResponseEntity.status(200).body("La imagen se borró con éxito");
         } catch (Exception e) {
             throw new Exception(e.getMessage());
+        }
+    }
+
+    @PostMapping("/subirImagen")
+    @Operation(
+            summary = "Subir imagen a Cloudinary",
+            description = "Endpoint para subir una imagen a Cloudinary y devolver la URL pública de la imagen",
+            tags = {"PostMapping"},
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Imagen subida exitosamente",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(
+                                            implementation = Map.class
+                                    )
+                            )
+                    )
+            }
+    )
+    public ResponseEntity<String> subirImagen(
+            @RequestPart("imagen") MultipartFile file
+    ) throws Exception {
+        try {
+            Map<String, Object> uploadResult = cloudinaryService.upload(file);
+            String url = (String) uploadResult.get("secure_url");
+            return ResponseEntity.status(200).body(url);
+        } catch (Exception e) {
+            throw new Exception("Error al subir la imagen: " + e.getMessage());
         }
     }
 }
