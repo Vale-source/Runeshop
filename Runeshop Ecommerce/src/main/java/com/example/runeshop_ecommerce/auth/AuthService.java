@@ -45,15 +45,8 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
-        if (usuarioRepository.findUsuarioByNombreUsuario(request.getNombreUsuario()).isPresent()) {
-            throw new DataExistException("Nombre de usuario ya registrado");
-        }
-        if (usuarioRepository.findUsuarioByEmail(request.getEmail()).isPresent()) {
-            throw new DataExistException("Email ya registrado");
-        }
-        if (usuarioRepository.findUsuarioByDni(request.getDni()).isPresent()) {
-            throw new DataExistException("DNI ya registrado");
-        }
+
+        Verify(request);
 
         Usuario usuario = Usuario.builder()
                 .nombreUsuario(request.getNombreUsuario())
@@ -74,6 +67,42 @@ public class AuthService {
                 .token(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    public AuthResponse registerAdmin(RegisterRequest request) {
+        Verify(request);
+
+        Usuario usuario = Usuario.builder()
+                .nombreUsuario(request.getNombreUsuario())
+                .contrasenia(passwordEncoder.encode(request.getContrasenia()))
+                .nombre(request.getNombre())
+                .apellido(request.getApellido())
+                .dni(request.getDni())
+                .tipoUsuario(Role.ADMIN)
+                .email(request.getEmail())
+                .build();
+
+        usuarioRepository.save(usuario);
+
+        String accessToken = jwtService.getToken(usuario);
+        String refreshToken = refreshTokenService.createRefreshToken(usuario.getNombreUsuario()).getToken();
+
+        return AuthResponse.builder()
+                .token(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    private void Verify(RegisterRequest request) {
+        if (usuarioRepository.findUsuarioByNombreUsuario(request.getNombreUsuario()).isPresent()) {
+            throw new DataExistException("Nombre de usuario ya registrado");
+        }
+        if (usuarioRepository.findUsuarioByEmail(request.getEmail()).isPresent()) {
+            throw new DataExistException("Email ya registrado");
+        }
+        if (usuarioRepository.findUsuarioByDni(request.getDni()).isPresent()) {
+            throw new DataExistException("DNI ya registrado");
+        }
     }
 
     public AuthResponse refreshToken(String refreshTokenRequest) {

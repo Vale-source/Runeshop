@@ -180,7 +180,7 @@ public class DetalleController extends BaseController<Detalle, Long> {
             }
     )
     public ResponseEntity<Detalle> agregarDetalle(
-            @RequestParam("prodId") Long prodId,
+            @RequestPart("prodId") Long prodId,
             @RequestPart("detalle") CrearDetalleDTO detalleDTO,
             @RequestPart(value = "imagen") List<MultipartFile> files
     ) throws Exception {

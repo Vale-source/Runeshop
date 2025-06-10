@@ -11,7 +11,11 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(
-                        "https://localhost:5173"
+                        "https://localhost:5173",
+                        "http://localhost:5173",
+                        "https://TU_ID_NGROK.ngrok-free.app",  // Backend expuesto via ngrok
+                        "https://www.mercadopago.com.ar",
+                        "https://www.mercadopago.com"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")

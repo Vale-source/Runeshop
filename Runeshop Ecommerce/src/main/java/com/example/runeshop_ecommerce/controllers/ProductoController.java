@@ -7,6 +7,7 @@ import com.example.runeshop_ecommerce.DTOs.GetProductoFilterDTO;
 import com.example.runeshop_ecommerce.DTOs.ProductoDetalleUploadRequest;
 import com.example.runeshop_ecommerce.entities.Detalle;
 import com.example.runeshop_ecommerce.entities.Producto;
+import com.example.runeshop_ecommerce.exception.NotFoundException;
 import com.example.runeshop_ecommerce.services.DetalleService;
 import com.example.runeshop_ecommerce.services.ProductoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -184,8 +185,9 @@ public class ProductoController extends BaseController<Producto, Long> {
                     orden);
             if (productos.isEmpty()) {
                 return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.ok(productos);
             }
-            return ResponseEntity.ok(productos);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

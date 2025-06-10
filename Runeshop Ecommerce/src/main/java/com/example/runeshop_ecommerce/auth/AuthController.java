@@ -89,6 +89,11 @@ public class AuthController {
         return ResponseEntity.ok(authService.register(request));
     }
 
+    @PostMapping("registerAdmin")
+    public ResponseEntity<AuthResponse> registerAdmin(@RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authService.registerAdmin(request));
+    }
+
     @PostMapping("refresh")
     @Operation(
             summary = "Refresh Token",
