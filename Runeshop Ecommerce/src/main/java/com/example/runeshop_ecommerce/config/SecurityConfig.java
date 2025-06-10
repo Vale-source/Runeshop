@@ -29,12 +29,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers("/auth/login", "/auth/register", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/producto/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/categoria/**", "/talle/**").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers("/auth/login","/auth/register", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/producto/**", "/categoria/**", "/talle/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/mercado/**").hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers("/perfil/usuarios/", "/auth/refresh").hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/direccion/**").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers("/auth/registerAdmin").hasAuthority("ADMIN")
                                 .anyRequest().hasAuthority("ADMIN")
                 )
                 .sessionManagement(sessionManager ->
