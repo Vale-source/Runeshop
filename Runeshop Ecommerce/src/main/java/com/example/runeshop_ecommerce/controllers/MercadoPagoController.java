@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ public class MercadoPagoController {
 
     Dotenv dotenv = Dotenv.load();
     protected String mercadoPagoKey = dotenv.get("MERCADOPAGO_API_KEY_SANDBOX");
+
+    private final String FRONTEND_URL = "https://localhost:5173";
 
     private final OrdenCompraService ordenCompraService;
 
@@ -109,9 +112,9 @@ public class MercadoPagoController {
             }
 
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                            .success("https://99e2-2803-9800-9842-7276-90db-2977-c9c5-cd22.ngrok-free.app/exito")
-                            .pending("https://99e2-2803-9800-9842-7276-90db-2977-c9c5-cd22.ngrok-free.app/pendiente")
-                            .failure("https://99e2-2803-9800-9842-7276-90db-2977-c9c5-cd22.ngrok-free.app/fallo")
+                            .success("https://03cc-2803-9800-9842-7276-75bc-9adf-cd85-fbdd.ngrok-free.app/mercado/exito")
+                            .pending("https://03cc-2803-9800-9842-7276-75bc-9adf-cd85-fbdd.ngrok-free.app/mercado/pendiente")
+                            .failure("https://03cc-2803-9800-9842-7276-75bc-9adf-cd85-fbdd.ngrok-free.app/mercado/fallo")
                             .build();
 
             PreferenceRequest preferenceRequest = PreferenceRequest.builder()
@@ -152,11 +155,18 @@ public class MercadoPagoController {
                     )
             }
     )
-    public String pagoExitoso(
+    public RedirectView pagoExitoso(
             @Parameter(description = "ID del pago generado por Mercado pago", required = true)
-            @RequestParam(required = false) String payment_id
+            @RequestParam(required = false) String payment_id,
+
+            @Parameter(description = "Estado del pago", required = true)
+            @RequestParam(required = false) String payment_status,
+
+            @Parameter(description = "Referencia externa", required = true)
+            @RequestParam(required = false) String external_reference
     ) {
-        return "Pago exitoso. ID del pago " + payment_id;
+        String redirectURL = FRONTEND_URL + "/success?payment_id=" + payment_id + "&status=" + payment_status + "&order_id=" + external_reference;
+        return new RedirectView(redirectURL);
     }
 
     @GetMapping("/fallo")
@@ -179,14 +189,23 @@ public class MercadoPagoController {
                     )
             }
     )
-    public String pagoFallido(
-            @Parameter(description = "Referencia externa generada por Mercado Pago (donde esta la orden de compra)")
-            @RequestParam(required = false) String external_reference
-    ) {
-        Long ordenCompraId = Long.valueOf(external_reference);
-        ordenCompraService.deleteOrdenCompraFallida(ordenCompraId);
+    public RedirectView pagoFallido(
+            @Parameter(description = "Referencia externa generada por Mercado Pago")
+            @RequestParam(required = false) String external_reference,
 
-        return "El pago fallo.";
+            @Parameter(description = "Tipo de error")
+            @RequestParam(required = false) String error_type
+    ) {
+        if (external_reference != null) {
+            Long ordenCompraId = Long.valueOf(external_reference);
+            ordenCompraService.deleteOrdenCompraFallida(ordenCompraId);
+            System.out.println("Orden de compra eliminada: " + ordenCompraId);
+        }
+
+        String redirectURL = FRONTEND_URL + "/pago-fallido?error=" + error_type +
+                "&order_id=" + external_reference;
+
+        return new RedirectView(redirectURL);
     }
 
     @GetMapping("/pendiente")
@@ -209,7 +228,15 @@ public class MercadoPagoController {
                     )
             }
     )
-    public String pagoPendiente() {
+    public String pagoPendiente(
+            @Parameter(description = "ID del pago")
+            @RequestParam(required = false) String payment_id,
+
+            @Parameter(description = "Referencia externa")
+            @RequestParam(required = false) String external_reference
+    ) {
+        System.out.println("Pago pendiente - Payment ID: " + payment_id);
+        System.out.println("External Reference: " + external_reference);
         return "El pago esta pendiente.";
     }
 }
