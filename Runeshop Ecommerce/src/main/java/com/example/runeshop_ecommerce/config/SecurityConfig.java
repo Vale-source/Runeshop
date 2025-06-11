@@ -1,5 +1,6 @@
 package com.example.runeshop_ecommerce.config;
 
+import com.example.runeshop_ecommerce.entities.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,12 +30,13 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers("/auth/login","/auth/register", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                                .requestMatchers("/auth/login","/auth/register", "/auth/refresh","/auth/registerAdmin", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/producto/**", "/categoria/**", "/talle/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/mercado/**").hasAnyAuthority("USER", "ADMIN")
-                                .requestMatchers("/perfil/usuarios/", "/auth/refresh").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers(HttpMethod.GET,"/perfil/**").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers(HttpMethod.POST,"/perfil/**").hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/direccion/**").hasAnyAuthority("USER", "ADMIN")
-                                .requestMatchers("/auth/registerAdmin").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/producto/**").hasAuthority("ADMIN")
                                 .anyRequest().hasAuthority("ADMIN")
                 )
                 .sessionManagement(sessionManager ->

@@ -23,7 +23,14 @@ public class JwtService {
     private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 15;
 
     public String getToken(UserDetails userDetails) {
-        return getToken(new HashMap<>(), userDetails);
+        Map<String, Object> extraClaims = new HashMap<>();
+
+        extraClaims.put("roles", userDetails.getAuthorities().stream()
+                .map(authority -> authority.getAuthority())
+                .toList()
+        );
+
+        return getToken(extraClaims, userDetails);
     }
 
 
