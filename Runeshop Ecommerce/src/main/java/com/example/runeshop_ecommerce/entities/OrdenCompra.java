@@ -37,7 +37,7 @@ public class OrdenCompra extends Base{
     @JoinColumn(name = "id_usuario_direccion")
     private UsuarioDireccion usuarioDireccion;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
     @JsonIgnoreProperties("ordenCompras")
     @JoinTable(
             name = "ordenCompra_detalle",

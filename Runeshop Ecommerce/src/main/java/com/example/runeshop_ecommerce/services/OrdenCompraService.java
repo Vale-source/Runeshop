@@ -87,15 +87,18 @@ public class OrdenCompraService extends BaseService<OrdenCompra, Long> {
     @Transactional
     public void deleteOrdenCompraFallida(Long id) {
         OrdenCompra ordenCompra = ordenCompraRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("No se encontro la orden de compra"));
+                .orElseThrow(() -> new NotFoundException("No se encontró la orden de compra"));
 
-        UsuarioDireccion ud = ordenCompra.getUsuarioDireccion();
+        List<Detalle> detalles = ordenCompra.getDetalles();
 
-        ordenCompra.getDetalles().forEach(detalle -> detalle.setStock(detalle.getStock() + 1));
+        detalles.forEach(detalle -> {
+            detalle.getOrdenCompras().remove(ordenCompra);
+            detalleRepository.save(detalle);
+        });
+
         ordenCompra.getDetalles().clear();
 
-        ud.getOrdenCompras().remove(ordenCompra);
-
-        usuarioDireccionRepository.save(ud);
+        ordenCompraRepository.delete(ordenCompra);
     }
+
 }

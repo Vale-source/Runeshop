@@ -202,7 +202,7 @@ public class MercadoPagoController {
             System.out.println("Orden de compra eliminada: " + ordenCompraId);
         }
 
-        String redirectURL = FRONTEND_URL + "/pago-fallido?error=" + error_type +
+        String redirectURL = FRONTEND_URL + "/error?error=" + error_type +
                 "&order_id=" + external_reference;
 
         return new RedirectView(redirectURL);
@@ -210,33 +210,29 @@ public class MercadoPagoController {
 
     @GetMapping("/pendiente")
     @Operation(
-            summary = "Ruta de MercadoPago cuando el pago esta pendiente",
+            summary = "Ruta de MercadoPago cuando el pago está pendiente",
             description = "BackUrl de pago pendiente",
             tags = {"GetMapping"},
-            responses = {
-                    @ApiResponse(
-                            responseCode = "500",
-                            description = "Redireccion hacia la pagina personalizada de pago pendiente",
-                            content = {
-                                    @Content(
-                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                            schema = @Schema(
-                                                    implementation = String.class //Redirect View
-                                            )
-                                    )
-                            }
+            responses = {@ApiResponse(
+                    responseCode = "302",
+                    description = "Redirección hacia la página personalizada de pago pendiente",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = RedirectView.class)
                     )
-            }
+            )}
     )
-    public String pagoPendiente(
+    public RedirectView pagoPendiente(
             @Parameter(description = "ID del pago")
             @RequestParam(required = false) String payment_id,
 
-            @Parameter(description = "Referencia externa")
+            @Parameter(description = "Referencia externa generada por el sistema")
             @RequestParam(required = false) String external_reference
     ) {
-        System.out.println("Pago pendiente - Payment ID: " + payment_id);
-        System.out.println("External Reference: " + external_reference);
-        return "El pago esta pendiente.";
+        String redirectURL = FRONTEND_URL + "/pending?paymentId=" + payment_id +
+                "&externalReference=" + external_reference;
+
+        return new RedirectView(redirectURL);
     }
+
 }

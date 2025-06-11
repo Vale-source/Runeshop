@@ -13,16 +13,26 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                         "https://localhost:5173",
                         "http://localhost:5173",
-                        "https://TU_ID_NGROK.ngrok-free.app",  // Backend expuesto via ngrok
+                        "https://api.mercadopago.com",
                         "https://www.mercadopago.com.ar",
-                        "https://www.mercadopago.com"
+                        "https://www.mercadopago.com",
+                        "ID NGROK"
                 )
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
-                .allowedHeaders("*")
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "OPTIONS")
+                .allowedHeaders(
+                        "Authorization",
+                        "Content-Type",
+                        "X-Requested-With",
+                        "Accept",
+                        "Origin",
+                        "Access-Control-Request-Method",
+                        "Access-Control-Request-Headers"
+                )
                 .exposedHeaders(
                         "Authorization",
                         "Content-Type",
-                        "Content-Disposition"
+                        "Content-Disposition",
+                        "Location"
                 )
                 .allowCredentials(true)
                 .maxAge(3600);

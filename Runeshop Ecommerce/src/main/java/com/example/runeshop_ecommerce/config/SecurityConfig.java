@@ -30,9 +30,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers("/auth/login","/auth/register", "/auth/refresh","/auth/registerAdmin", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                                .requestMatchers("/auth/login","/auth/register", "/auth/refresh","/auth/registerAdmin",
+                                        "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html",
+                                        "/mercado/exito", "/mercado/fallo", "/mercado/pendiente").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/producto/**", "/categoria/**", "/talle/**").permitAll()
-                                .requestMatchers("/mercado/**").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers("/mercado/pago").hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers(HttpMethod.GET,"/perfil/**").hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/usuario/**").hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/usuario/**").hasAnyAuthority("USER", "ADMIN")
