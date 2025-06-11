@@ -22,11 +22,30 @@ public class AdminSetup {
 					.nombre("Administrador")
 					.apellido("Principal")
 					.dni(42159633)
-					.email("admin@example.com")
+					.email("admin@gmail.com")
 					.build();
 
 			authService.registerAdmin(adminRequest);
 			System.out.println("Administrador creado con exito");
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+	}
+
+	@PostConstruct
+	public void	initializeUser() throws Exception {
+		try	{
+			RegisterRequest userRequest = RegisterRequest.builder()
+					.nombreUsuario("User")
+					.contrasenia("newuser123")
+					.nombre("Usuario")
+					.apellido("Prueba")
+					.dni(46547525)
+					.email("usuario@yahoo.com")
+					.build();
+
+			authService.register(userRequest);
+			System.out.println("Usuario creado con exito");
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}

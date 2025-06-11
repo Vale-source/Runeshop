@@ -32,8 +32,10 @@ public class SecurityConfig {
                         authRequest
                                 .requestMatchers("/auth/login","/auth/register", "/auth/refresh","/auth/registerAdmin", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/producto/**", "/categoria/**", "/talle/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/mercado/**").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers("/mercado/**").hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers(HttpMethod.GET,"/perfil/**").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/usuario/**").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/usuario/**").hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers(HttpMethod.POST,"/perfil/**").hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/direccion/**").hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/producto/**").hasAuthority("ADMIN")
