@@ -48,6 +48,34 @@ public class RuneshopEcommerceApplication {
     ) {
         return args -> {
             try {
+                // Usuario
+                Usuario usuario = Usuario.builder()
+                        .nombre("Juan")
+                        .apellido("Perez")
+                        .nombreUsuario("juan.perez")
+                        .email("juanperez@example.com")
+                        .contrasenia("password123")
+                        .tipoUsuario(Role.USER)
+                        .dni(12345678)
+                        .build();
+                usuarioRepository.save(usuario);
+
+                // Direccion
+                Direccion direccion = Direccion.builder()
+                        .direccion("Pedro Molina 458")
+                        .codigoPostal(5501)
+                        .departamento("Palermo")
+                        .provincia("Buenos Aires")
+                        .pais("Argentina")
+                        .build();
+                direccionRepository.save(direccion);
+                // UsuarioDireccion
+                UsuarioDireccion usuarioDireccion = UsuarioDireccion.builder()
+                        .usuario(usuario)
+                        .direccion(direccion)
+                        .build();
+                usuarioDireccionRepository.save(usuarioDireccion);
+
                 // Talles
                 Talle talle = Talle.builder()
                         .numero(43)
@@ -200,14 +228,14 @@ public class RuneshopEcommerceApplication {
 
                 // Precios
                 Precio precio1 = Precio.builder()
-                        .precioCompra(450000.0)
-                        .precioVenta(550000.0)
+                        .precioCompra(80000.0)
+                        .precioVenta(30000.0)
                         .build();
                 precioRepository.save(precio1);
 
                 Precio precio2 = Precio.builder()
-                        .precioCompra(180000.0)
-                        .precioVenta(220000.0)
+                        .precioCompra(100000.0)
+                        .precioVenta(20000.0)
                         .build();
                 precioRepository.save(precio2);
 
@@ -218,8 +246,8 @@ public class RuneshopEcommerceApplication {
                 precioRepository.save(precio3);
 
                 Precio precio4 = Precio.builder()
-                        .precioCompra(25000.0)
-                        .precioVenta(35000.0)
+                        .precioCompra(69000.0)
+                        .precioVenta(88000.0)
                         .build();
                 precioRepository.save(precio4);
 

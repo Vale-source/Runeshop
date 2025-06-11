@@ -40,7 +40,7 @@ import java.util.List;
 public class MercadoPagoController {
 
     Dotenv dotenv = Dotenv.load();
-    protected String mercadoPagoKey = dotenv.get("MERCADOPAGO_API_KEY_SANDBOX");
+    private final String mercadoPagoKey = dotenv.get("MERCADOPAGO_API_KEY_SANDBOX");
 
     private final String FRONTEND_URL = "https://localhost:5173";
 
@@ -111,10 +111,11 @@ public class MercadoPagoController {
                 items.add(item);
             }
 
+            String BACKEND_URL = "https://6891-2803-9800-9842-7276-356c-33bb-ca05-3462.ngrok-free.app";
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                            .success("https://03cc-2803-9800-9842-7276-75bc-9adf-cd85-fbdd.ngrok-free.app/mercado/exito")
-                            .pending("https://03cc-2803-9800-9842-7276-75bc-9adf-cd85-fbdd.ngrok-free.app/mercado/pendiente")
-                            .failure("https://03cc-2803-9800-9842-7276-75bc-9adf-cd85-fbdd.ngrok-free.app/mercado/fallo")
+                            .success( BACKEND_URL + "/mercado/exito")
+                            .pending( BACKEND_URL + "/mercado/pendiente")
+                            .failure( BACKEND_URL + "/mercado/fallo")
                             .build();
 
             PreferenceRequest preferenceRequest = PreferenceRequest.builder()
@@ -127,8 +128,7 @@ public class MercadoPagoController {
             PreferenceClient client = new PreferenceClient();
             Preference preference = client.create(preferenceRequest);
 
-
-            return preference.getInitPoint();
+            return preference.getSandboxInitPoint();
 
         } catch (Exception e) {
             throw new RuntimeException("Error al crear la preferencia: " + e.getMessage());
