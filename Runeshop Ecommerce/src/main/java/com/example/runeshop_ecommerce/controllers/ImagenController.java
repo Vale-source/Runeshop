@@ -1,11 +1,12 @@
 package com.example.runeshop_ecommerce.controllers;
 
 import com.example.runeshop_ecommerce.entities.Imagen;
-import com.example.runeshop_ecommerce.services.BaseService;
+
 import com.example.runeshop_ecommerce.services.CloudinaryService;
 import com.example.runeshop_ecommerce.services.ImagenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,8 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/imagen")
@@ -73,20 +73,21 @@ public class ImagenController extends BaseController<Imagen, Long> {
                             description = "Imagen subida exitosamente",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(
-                                            implementation = Map.class
+                                    array = @ArraySchema(
+                                            schema = @Schema(
+                                                    implementation = MultipartFile.class
+                                            )
                                     )
                             )
                     )
             }
     )
-    public ResponseEntity<String> subirImagen(
-            @RequestPart("imagen") MultipartFile file
+    public ResponseEntity<List<Imagen>> subirImagen(
+            @RequestPart("imagen") List<MultipartFile> files
     ) throws Exception {
         try {
-            Map<String, Object> uploadResult = cloudinaryService.upload(file);
-            String url = (String) uploadResult.get("secure_url");
-            return ResponseEntity.status(200).body(url);
+            List<Imagen> imagenes = imagenService.subirImagen(files);
+            return ResponseEntity.status(200).body(imagenes);
         } catch (Exception e) {
             throw new Exception("Error al subir la imagen: " + e.getMessage());
         }
